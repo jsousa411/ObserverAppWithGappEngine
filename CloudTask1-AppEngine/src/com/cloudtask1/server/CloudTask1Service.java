@@ -7,34 +7,45 @@ import com.cloudtask1.annotation.ServiceMethod;
 
 public class CloudTask1Service {
 
+	static DataStore db = new DataStore(); 
+
 	@ServiceMethod
 	public Task createTask() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		 return db.update(new Task()); 
+			
 	}
 
 	@ServiceMethod
 	public Task readTask(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		return db.find(id);
 	}
 
 	@ServiceMethod
 	public Task updateTask(Task task) {
-		// TODO Auto-generated method stub
-		return null;
+
+		return db.update(task);
+		
+		//to notify android that a new data is available
+		//u can use c2dm or just send a message to the phone
+		
+		//via c2dm
+		//DataStore.sendC2DMUpdate(TaskChange.Update + TaskChange.separator + task.getId());
 	}
 
+	 
+	
 	@ServiceMethod
 	public void deleteTask(Task task) {
-		// TODO Auto-generated method stub
+
+		db.delete(task.getId());
 
 	}
 
 	@ServiceMethod
 	public List<Task> queryTasks() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
+		return db.findAll();
+	}
 }

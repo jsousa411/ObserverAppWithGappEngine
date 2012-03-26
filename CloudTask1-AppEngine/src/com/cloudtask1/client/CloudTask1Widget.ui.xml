@@ -37,7 +37,7 @@
                     placeholder="pat@example.com" />
                    <p>Input message or task</p>
                     <textarea ui:field="nameMessage" type="text" class="field" size="22"
-                    placeholder="Message" />
+                    placeholder="coordinates" />
 				</div>
         	</td>
         </tr>

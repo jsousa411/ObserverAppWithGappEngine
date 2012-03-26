@@ -103,6 +103,9 @@ public class CloudTask1Widget extends Composite {
   List<Long> ids;
 
   TaskProxy taskProxy;
+  
+ // private static final String BUTTON_STYLE = "send centerbtn";
+  
   /**
    * Timer to clear the UI.
    */
@@ -138,11 +141,11 @@ public class CloudTask1Widget extends Composite {
     initWidget(uiBinder.createAndBindUi(this));
     sayHelloButton.getElement().setClassName("send centerbtn");
     sendMessageButton.getElement().setClassName("send");
-    addTaskButton.getElement().setClassName("add");
-    updateTaskButton.getElement().setClassName("update");
-    queryTaskButton.getElement().setClassName("query");
-    deleteTaskButton.getElement().setClassName("delete");
-    
+   /* addTaskButton.getElement().setClassName("BUTTON_STYLE");
+    updateTaskButton.getElement().setClassName("BUTTON_STYLE");
+    queryTaskButton.getElement().setClassName("BUTTON_STYLE");
+    deleteTaskButton.getElement().setClassName("BUTTON_STYLE");
+    */
 
     final EventBus eventBus = new SimpleEventBus();
     final MyRequestFactory requestFactory = GWT.create(MyRequestFactory.class);
@@ -200,7 +203,228 @@ public class CloudTask1Widget extends Composite {
     });
     
     //Add a task
-       
+    addTaskButton.addClickHandler(new ClickHandler(){
+
+		@Override
+		public void onClick(ClickEvent event) {
+			addTaskButton.setEnabled(false);
+			
+			CloudTask1Request myCloudTasks = requestFactory.cloudTask1Request();
+			myCloudTasks.createTask().fire(new Receiver<TaskProxy>(){
+
+				@Override
+				public void onSuccess(TaskProxy task) {
+					Window.alert("CREATE SUCCESS:(" + task.getId() + ")" );
+					taskProxy = task;
+					id = task.getId();
+					ids.add(id);
+					
+				}
+								
+			});
+		 
+			
+		}    	
+     });
+    
+    
+  //Delete a task
+    deleteTaskButton.addClickHandler(new ClickHandler(){
+
+		@Override
+		public void onClick(ClickEvent event) {
+			
+			try{
+				if(nameId.getValue().length() > 0){
+					
+					int temp;
+					String tempstr;
+					
+					tempstr = nameId.getValue();
+					
+					//temp =  tempstr;
+					
+					//Window.alert("value of tmp str is : "+tempstr);
+					
+					id = Long.valueOf(tempstr); //ids.get(temp);
+					
+					Window.alert("value of id is : "+id);
+				}
+				else{
+					id = 1L;
+				}
+			}
+			catch(Exception e){
+				
+				
+				Window.alert(e.toString());
+			}
+			
+			
+			requestFactory.cloudTask1Request().readTask(id).fire( new Receiver<TaskProxy>() {
+
+				//Need to Implement
+				//public void onFailure(){
+				//}
+				/*
+				 * 
+				*/
+				@Override
+				public void onSuccess(TaskProxy response) {
+					
+					
+						requestFactory.cloudTask1Request().deleteTask(response).fire(new Receiver<Void>(){
+							
+							
+
+							@Override
+							public void onSuccess(Void response) {
+								Window.alert("Deleted Task: "+id);
+								
+							}
+							
+						});
+					}
+					
+				});
+		  }
+		});
+    
+    
+    //Update a task
+    updateTaskButton.addClickHandler(new ClickHandler(){
+
+		@Override
+		public void onClick(ClickEvent event) {
+			
+			//get id number
+			//name and notes from text fields
+			try{
+				if(nameId.getValue().length() > 0){
+					
+					int temp;
+					String tempstr;
+					
+					tempstr = nameId.getValue();
+					
+					//temp =  tempstr;
+					
+					//Window.alert("value of tmp str is : "+tempstr);
+					
+					id = Long.valueOf(tempstr); //ids.get(temp);
+					
+					//Window.alert("value of id is : "+id);
+				}
+				else{
+					//id = 1L;
+					Window.alert("\nNO TASK WITH THIS ID\n");
+					Exception e = new Exception();
+					
+					throw e;
+					
+				}
+			}
+			catch(Exception e){
+				
+				
+				Window.alert(e.toString());
+			}
+			finally{
+				
+				//id = 1L;
+			}
+			
+			requestFactory.cloudTask1Request().readTask(id).fire( new Receiver<TaskProxy>() {
+
+				//this is supposed to be the way to get the task to be updated
+				@Override
+				public void onSuccess(TaskProxy response) {
+					
+					//String nameStr = name.getValue();
+					//requestFactory.cloudTask1Request().
+					//response.setNote(nameMessage.getValue());
+					
+					taskProxy = response;
+					
+					
+					//Window.alert("UPDATED TASK:  "+response.getId()+" with "+
+					//name.getValue()+" and "+nameMessage.getValue());
+					
+					update1(response);
+					
+				}
+				
+				
+			});
+			
+			//we just passs in taskProxy for now to avoid errors...
+			update1(taskProxy);
+			
+		}
+     
+		private void update1(TaskProxy task) { 
+			CloudTask1Request request =  requestFactory.cloudTask1Request();
+
+			//an exception is being thrown here....need to see if removing the line below still works....
+			task = request.edit(task); 
+		  	
+		  	//taskProxy.setName("");//name.getValue());
+		  	
+		  	//taskProxy.setNote(getTaskName());
+		  	
+		  	task.setName(name.getValue());
+			task.setNote(nameMessage.getValue());
+		  	
+		  	
+		  	  	request.updateTask(task).fire(new Receiver<TaskProxy>() {
+			  		@Override    public void onSuccess(TaskProxy task) {
+			  			Window.alert("UPDATE SUCCESS:(" 
+			  		+ task.getId().toString() + "): " + task.getName());
+			  			} 
+			  		}); 
+		}
+      		
+		private String getTaskName(){
+			
+			 //String recipient = name.getValue();
+		     String message = nameMessage.getValue();
+		   	     
+		     return message;
+		}   
+		 
+      });
+      
+  //Query Tasks added
+  queryTaskButton.addClickHandler(new ClickHandler(){
+
+  				@Override
+  				public void onClick(ClickEvent event) {
+  					
+  					query();
+  					
+  				}
+  		
+  				
+		  		private void query() { 
+		  			
+		  			
+		  	    	requestFactory.cloudTask1Request().queryTasks().fire( new Receiver<List<TaskProxy>>() {
+		  	    		@Override    
+		  	    		public void onSuccess(List<TaskProxy> taskList) {
+		  	    			String names = "\n";
+		  	    			for (TaskProxy task : taskList) {
+		  	    				names += " (" + task.getId().toString() + "): " + task.getName() + 
+		  	    						" is located at: ("+ task.getNote()+")\n";       
+		  	    				
+		  	    			//	ids.add(task.getId().intValue(),task.getId());
+		  	    			}
+		  	    			Window.alert("QUERY SUCCESS: Count[" + taskList.size()  + "] Values:" + names);
+		  	    			} 
+		  	    		});
+		  	     }
+  	    
+         });
+   
   
   }
 }
