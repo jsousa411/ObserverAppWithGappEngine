@@ -44,7 +44,10 @@
     <string name="hello_world_info_text">Press the \"Locator\" button to receive a list of near by friends.</string>
 
     <!-- Initial "hello, world" response message [CHAR LIMIT=NONE] -->
-    <string name="hello_world_text"></string>
+    <string name="hello_world_text">No one in sight yet!  :)</string>
+    
+    <!-- Initial "hello, world" response message [CHAR LIMIT=NONE] -->
+    <string name="map_info">Click, \"Map It"\ to see friend's location on map view mode</string>
 
     <!-- Dialog message text [CHAR LIMIT=NONE] -->
     <string name="needs_account">To receive notifications from this app, you must first create an account.</string>
@@ -60,11 +63,14 @@
 
     <!-- List view header text [CHAR LIMIT=NONE] -->
     <string name="select_account">Select the account you wish to authorize:</string>
+    
+    <!-- Show map -->
+    <string name="see_map">Map It</string>
 
     <!-- Dialog button text [CHAR LIMIT=NONE] -->
     <string name="skip">Skip</string>
 
     <!-- Notification message [CHAR LIMIT=NONE] -->
-    <string name="unregistration_succeeded">Unegistered %1$s for C2DM messaging.</string>
+    <string name="unregistration_succeeded">Unregistered %1$s for C2DM messaging.</string>
 
 </resources>

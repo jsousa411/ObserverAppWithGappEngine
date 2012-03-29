@@ -14,15 +14,8 @@
  *******************************************************************************/
 package com.cloudtask1;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
-
-import com.cloudtask1.client.MyRequestFactory;
-import com.cloudtask1.client.MyRequestFactory.HelloWorldRequest;
-import com.cloudtask1.shared.CloudTask1Request;
-import com.cloudtask1.shared.TaskProxy;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -40,15 +33,32 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.cloudtask1.client.MyRequestFactory;
+import com.cloudtask1.shared.CloudTask1Request;
+import com.cloudtask1.shared.TaskProxy;
+import com.google.web.bindery.requestfactory.shared.Receiver;
+
 /**
  * Main activity - requests "Hello, World" messages from the server and provides
  * a menu item to invoke the accounts activity.
  */
 public class CloudTask1Activity extends Activity {
-    /**
+	
+	Intent myintent;
+	 String result;
+	//myLocationOverlay;
+	/*
+	GeoPoint point;
+	MapView mapView;
+	MapController mc;
+	*/
+	
+	//MapsActivity LocationOverLay;
+	
+	/**
      * Tag for logging.
      */
-    private static final String TAG = "LOCATOR";//"CloudTask1Activity";
+    private static final String TAG = "Locator";
 
     /**
      * The current context.
@@ -84,6 +94,8 @@ public class CloudTask1Activity extends Activity {
             Util.generateNotification(mContext, String.format(message, accountName));
         }
     };
+    
+    
 
     /**
      * Begins the activity.
@@ -95,6 +107,29 @@ public class CloudTask1Activity extends Activity {
 
         // Register a receiver to provide register/unregister notifications
         registerReceiver(mUpdateUIReceiver, new IntentFilter(Util.UPDATE_UI_INTENT));
+        // Intent myintent = new Intent(this, MapsActivity.class);
+        
+        //startActivityForResult(myintent, 0);
+        //registerReceiver(mUpdateUIReceiver, new IntentFilter(this, MapsActivity.class));
+         //LocationOverLay = new MapsActivity();
+		 
+        
+    }
+    
+    /*
+     * Start Maps activity
+     * 
+     */
+    public void onClick1(View v) {
+         
+        /*
+         * Construct an Intent to launch Map Activity.
+         */
+        Intent intent = new Intent(this, MapsActivity.class);
+        /*
+         * Start YellowActivity and wait for the result.
+         */
+        startActivityForResult(intent, 0);
     }
 
     @Override
@@ -105,7 +140,9 @@ public class CloudTask1Activity extends Activity {
         String connectionStatus = prefs.getString(Util.CONNECTION_STATUS, Util.DISCONNECTED);
         if (Util.DISCONNECTED.equals(connectionStatus)) {
             startActivity(new Intent(this, AccountsActivity.class));
+        	
         }
+        
         setScreenContent(R.layout.hello_world);
     }
 
@@ -124,6 +161,7 @@ public class CloudTask1Activity extends Activity {
         inflater.inflate(R.menu.main_menu, menu);
         // Invoke the Register activity
         menu.getItem(0).setIntent(new Intent(this, AccountsActivity.class));
+        //menu.getItem(0).setIntent(new Intent(this, MapsActivity.class));
         return true;
     }
 
@@ -134,62 +172,64 @@ public class CloudTask1Activity extends Activity {
 
         final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
         final Button sayHelloButton = (Button) findViewById(R.id.say_hello);
+
         sayHelloButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
+            
+        	public void onClick(View v) {
                 sayHelloButton.setEnabled(false);
                 helloWorld.setText(R.string.contacting_server);
-
+                
                 // Use an AsyncTask to avoid blocking the UI thread
                 new AsyncTask<Void, Void, String>() {
                     private String message;
 
-                    //@Override
-                   /* protected String doInBackground(Void... arg0) {
-                        MyRequestFactory requestFactory = Util.getRequestFactory(mContext,
-                                MyRequestFactory.class);
-                        final HelloWorldRequest request = requestFactory.helloWorldRequest();
-                        Log.i(TAG, "Sending request to server");
-                        request.getMessage().fire(new Receiver<String>() {
-                            @Override
-                            public void onFailure(ServerFailure error) {
-                                message = "Failure: " + error.getMessage();
-                            }
-
-                            @Override
-                            public void onSuccess(String result) {
-                                message = result;
-                            }
-                        });
-                        return message;
-                    }
-                    */
-                    
+                                        
                     protected String doInBackground(Void... arg0) {
                         MyRequestFactory requestFactory = Util.getRequestFactory(mContext,
                                 MyRequestFactory.class);
                         final CloudTask1Request request = requestFactory.cloudTask1Request();
                         Log.i(TAG, "Sending request to server");
                         request.queryTasks().fire(new Receiver<List<TaskProxy>>() {
-                            //@Override
-                            //public void onFailure(ServerFailure error) {
-                            //    message = "Failure: " + error.getMessage();
-                            //}
+                            private boolean shadow;
 
-                            @Override
+							
+                            @SuppressWarnings("null")
+							@Override
                             public void onSuccess(List<TaskProxy> taskList) {
                                 //message = result;
                             	
+                            	
                             	message = "\n";
+                            	String [] points = new String[taskList.size()];
+                            	int i = 0;
     		  	    			for (TaskProxy task : taskList) {
     		  	    				message += " (" + task.getId().toString() + "): " + task.getName() + 
     		  	    						" is located at: ("+ task.getNote()+")\n"; 
-    		  	    						
-    		  	    						// " (" + task.getId().toString() + "): " + task.getName() + "\n";       
     		  	    				
-    		  	    			//	ids.add(task.getId().intValue(),task.getId());
+    		  	    				//int id = Integer.getInteger(task.getId().toString());
+    		  	    				//points.add(id, task.getNote().toString());
+    		  	    				
+    		  	    				//points[i] = new String();
+    		  	    				//points[i]=task.getNote();
+    		  	    				//i++;
+    		  	    				
+    		  	    				points[i] = task.getNote();
+    		  	    				
     		  	    			}
+    		  	    			
+    		  	    			Intent intentMaps = new Intent(CloudTask1Activity.this,MapsActivity.class);
+    		  	    			
+    		  	    			 
+    		  	    			intentMaps.putExtra("points", points);
+		  	    				intentMaps.putExtra("message", message);
+		  	    				
+		  	    				startActivity(intentMaps);
+		  	    				
+		  	    				
                             }
                         });
+                        
+                        result = message;
                         return message;
                     }
 
@@ -197,6 +237,17 @@ public class CloudTask1Activity extends Activity {
                     protected void onPostExecute(String result) {
                         helloWorld.setText(result);
                         sayHelloButton.setEnabled(true);
+                    	
+                    	 
+                    	
+                    	//Intent intent = new Intent(this, MapsActivity.class);
+  	    		        /*
+  	    		         * Start MapsActivity and wait for the result.
+  	    		         */
+  	    		        //startActivityForResult(intent, 0);
+                        
+                    	
+  	    				
                     }
                 }.execute();
             }
