@@ -1,6 +1,7 @@
 package com.cloudtask1;
 
 import java.util.List;
+import java.util.StringTokenizer;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
@@ -35,6 +36,7 @@ public class MapsActivity extends com.google.android.maps.MapActivity {
     MapController mc;
     
     String myPoints;
+    StringTokenizer tokens;
     
     
     class MapOverlay extends com.google.android.maps.Overlay
@@ -77,14 +79,22 @@ public class MapsActivity extends com.google.android.maps.MapActivity {
          * To show a map of San Francisco, we need to create a geo point object
          * with longitude and latitude in center of SF.
          */
-        point = new GeoPoint(40752000, -73995000);
+        
+        tokens = new StringTokenizer(myPoints,",");
+        
+        tokens.nextToken();
+        Integer p1 = Integer.parseInt(tokens.nextToken());
+        Integer p2 = Integer.parseInt(tokens.nextToken());
+        point = new GeoPoint(p1,p2);
+        //point = new GeoPoint(40752000, -73995000);
+        //point = new GeoPoint(37792625,-12239348);
 
         /**
          * MapController is needed to set view location and zooming.
          */
         mc = mapView.getController();
         mc.setCenter(point);
-        mc.setZoom(14);
+        mc.setZoom(19);
         
       //---Add a location marker---
         MapOverlay mapOverlay = new MapOverlay();
@@ -97,10 +107,11 @@ public class MapsActivity extends com.google.android.maps.MapActivity {
         //http://mobiforge.com/developing/story/using-google-maps-android
         //display a label with the point's coordinates
        final Toast myToast = Toast.makeText(getBaseContext(),
-    		   myPoints, Toast.LENGTH_LONG);
+    		   (p1.toString()+","+p2.toString()), Toast.LENGTH_LONG);
        
        
-      /* myToast = Toast.makeText(getBaseContext(), 
+      /* 
+       myToast = Toast.makeText(getBaseContext(), 
                 point.getLatitudeE6() / 1E6 + "," + 
                 point.getLongitudeE6() /1E6 , 
                 Toast.LENGTH_LONG);

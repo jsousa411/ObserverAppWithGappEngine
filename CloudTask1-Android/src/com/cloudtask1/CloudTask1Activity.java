@@ -203,9 +203,11 @@ public class CloudTask1Activity extends Activity {
                             	String [] points = new String[taskList.size()];
                             	int i = 0;
     		  	    			for (TaskProxy task : taskList) {
-    		  	    				message += " (" + task.getId().toString() + "): " + task.getName() + 
+    		  	    				/*message += " (" + task.getId().toString() + "): " + task.getName() + 
     		  	    						" is located at: ("+ task.getNote()+")\n"; 
+    		  	    				*/
     		  	    				
+    		  	    				message += task.getId()+","+task.getNote()+",";
     		  	    				//int id = Integer.getInteger(task.getId().toString());
     		  	    				//points.add(id, task.getNote().toString());
     		  	    				
