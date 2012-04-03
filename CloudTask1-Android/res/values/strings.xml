@@ -65,12 +65,14 @@
     <string name="select_account">Select the account you wish to authorize:</string>
     
     <!-- Show map -->
-    <string name="see_map">Map It</string>
+    <string name="see_map">Post My Location</string>
 
     <!-- Dialog button text [CHAR LIMIT=NONE] -->
     <string name="skip">Skip</string>
 
     <!-- Notification message [CHAR LIMIT=NONE] -->
     <string name="unregistration_succeeded">Unregistered %1$s for C2DM messaging.</string>
+    
+    <string name="get_location">Display Location</string>
 
 </resources>

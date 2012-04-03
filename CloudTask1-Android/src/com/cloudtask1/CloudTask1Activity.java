@@ -32,10 +32,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cloudtask1.client.MyRequestFactory;
 import com.cloudtask1.shared.CloudTask1Request;
 import com.cloudtask1.shared.TaskProxy;
+//import com.google.gwt.user.client.Window;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 
 /**
@@ -44,8 +46,13 @@ import com.google.web.bindery.requestfactory.shared.Receiver;
  */
 public class CloudTask1Activity extends Activity {
 	
+	
+	final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
+    final Button sayHelloButton = (Button) findViewById(R.id.say_hello);
+    final Button createLocation = (Button) findViewById(R.id.see_map);
+     
 	Intent myintent;
-	 String result;
+	String result;
 	//myLocationOverlay;
 	/*
 	GeoPoint point;
@@ -116,22 +123,7 @@ public class CloudTask1Activity extends Activity {
         
     }
     
-    /*
-     * Start Maps activity
-     * 
-     */
-    public void onClick1(View v) {
-         
-        /*
-         * Construct an Intent to launch Map Activity.
-         */
-        Intent intent = new Intent(this, MapsActivity.class);
-        /*
-         * Start YellowActivity and wait for the result.
-         */
-        startActivityForResult(intent, 0);
-    }
-
+    
     @Override
     public void onResume() {
         super.onResume();
@@ -170,13 +162,13 @@ public class CloudTask1Activity extends Activity {
     private void setHelloWorldScreenContent() {
         setContentView(R.layout.hello_world);
 
-        final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
-        final Button sayHelloButton = (Button) findViewById(R.id.say_hello);
-
+       
+////////////////////////////////////////////////////////////////////////////////////////////////////
         sayHelloButton.setOnClickListener(new OnClickListener() {
             
         	public void onClick(View v) {
                 sayHelloButton.setEnabled(false);
+                createLocation.setEnabled(false);
                 helloWorld.setText(R.string.contacting_server);
                 
                 // Use an AsyncTask to avoid blocking the UI thread
@@ -193,6 +185,18 @@ public class CloudTask1Activity extends Activity {
                             private boolean shadow;
 
 							
+                            @SuppressWarnings("unused")
+							public void onFailure(Throwable error) {
+                            	
+                            	final Toast myToast = Toast.makeText(getBaseContext(),
+                     	    		   "YOU FAILED TO QUERY DATA!  ERROR: "+error.toString(),Toast.LENGTH_LONG);
+                     	    		        
+                     	       
+                     	       
+                     	        myToast.show();
+                            }
+
+                            
                             @SuppressWarnings("null")
 							@Override
                             public void onSuccess(List<TaskProxy> taskList) {
@@ -208,12 +212,7 @@ public class CloudTask1Activity extends Activity {
     		  	    				*/
     		  	    				
     		  	    				message += task.getId()+","+task.getNote()+",";
-    		  	    				//int id = Integer.getInteger(task.getId().toString());
-    		  	    				//points.add(id, task.getNote().toString());
     		  	    				
-    		  	    				//points[i] = new String();
-    		  	    				//points[i]=task.getNote();
-    		  	    				//i++;
     		  	    				
     		  	    				points[i] = task.getNote();
     		  	    				
@@ -239,6 +238,7 @@ public class CloudTask1Activity extends Activity {
                     protected void onPostExecute(String result) {
                         helloWorld.setText(result);
                         sayHelloButton.setEnabled(true);
+                        createLocation.setEnabled(true);
                     	
                     	 
                     	
@@ -255,6 +255,63 @@ public class CloudTask1Activity extends Activity {
             }
         });
     }
+    
+    
+    /*
+     * Start Maps activity
+     * 
+     */
+   /*public void onClick1(View v) {
+         
+    	sayHelloButton.setEnabled(false);
+        createLocation.setEnabled(false);
+        helloWorld.setText(R.string.contacting_server);
+        
+         
+         // Use an AsyncTask to avoid blocking the UI thread
+         new AsyncTask<Void, Void, String>() {
+             private String message;
+
+                                 
+             protected String doInBackground(Void... arg0) {
+                 MyRequestFactory requestFactory = Util.getRequestFactory(mContext,
+                         MyRequestFactory.class);
+                 final CloudTask1Request request = requestFactory.cloudTask1Request();
+                 Log.i(TAG, "Sending request to server");
+                 request.createTask().fire(new Receiver<TaskProxy>(){
+                      
+
+					@Override
+					public void onSuccess(TaskProxy task) {
+						
+						String message = "CREATE SUCCESS:(" + task.getId() + ")";
+						
+						final Toast myToast = Toast.makeText(getBaseContext(),
+              	    		   message,Toast.LENGTH_LONG);
+              	    	
+						myToast.show();
+					}
+
+						
+                   
+	  	    				
+                     
+                 });
+                 
+                 result = message;
+                 return message;
+             }
+
+             @Override
+             protected void onPostExecute(String result) {
+                 
+            	 sayHelloButton.setEnabled(true);
+                 createLocation.setEnabled(true);
+                 helloWorld.setText(R.string.contacting_server);
+   				
+             }
+         }.execute();
+    }*/
 
     /**
      * Sets the screen content based on the screen id.

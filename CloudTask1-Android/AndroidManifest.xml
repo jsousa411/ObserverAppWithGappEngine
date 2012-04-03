@@ -10,8 +10,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+ 	
 
     <!-- Only this application can receive the messages and registration result -->
     <permission
@@ -44,7 +45,7 @@
             android:name="com.google.android.maps"
             android:required="true" >
         </uses-library>
-
+        
         <!-- .CloudTask1Activity -->
         <!-- Main activity -->
         <activity
@@ -73,7 +74,11 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         
-
+		<activity
+		    android:name=".GeoActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.NoTitleBar" >		    
+		</activity>
         <!--
              In order to use the C2DM library, an application must declare a class 
              with the name C2DMReceiver, extending com.google.android.c2dm.C2DMBaseReceiver.

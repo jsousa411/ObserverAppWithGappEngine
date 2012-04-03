@@ -3,10 +3,16 @@ package com.cloudtask1;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import com.cloudtask1.client.MyRequestFactory;
+import com.cloudtask1.shared.CloudTask1Request;
+import com.cloudtask1.shared.TaskProxy;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
+import com.google.android.maps.OverlayItem;
+import com.google.web.bindery.requestfactory.shared.Receiver;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +20,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -35,9 +42,24 @@ public class MapsActivity extends com.google.android.maps.MapActivity {
     MapView mapView;
     MapController mc;
     
+    String message;
     String myPoints;
     StringTokenizer tokens;
     
+    Integer p1;
+    Integer p2;
+    
+    
+    Boolean changedLocation;
+    /**
+     * Tag for logging.
+     */
+    private static final String TAG = "Locator";
+
+    /**
+     * The current context.
+     */
+    private Context mContext = this;
     
     class MapOverlay extends com.google.android.maps.Overlay
     {
@@ -68,10 +90,10 @@ public class MapsActivity extends com.google.android.maps.MapActivity {
 
         Intent listener = getIntent();
         
-       
+        changedLocation = false;
         //get message from cloudtask activity
 		myPoints = listener.getStringExtra("message");
-        
+        message=myPoints;
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
 
@@ -82,52 +104,144 @@ public class MapsActivity extends com.google.android.maps.MapActivity {
         
         tokens = new StringTokenizer(myPoints,",");
         
+        if(tokens != null)
+        {
+        	
+        	changedLocation = true;
+        }
         tokens.nextToken();
-        Integer p1 = Integer.parseInt(tokens.nextToken());
-        Integer p2 = Integer.parseInt(tokens.nextToken());
+        p1 = Integer.parseInt(tokens.nextToken());
+        p2 = Integer.parseInt(tokens.nextToken());
         point = new GeoPoint(p1,p2);
         //point = new GeoPoint(40752000, -73995000);
         //point = new GeoPoint(37792625,-12239348);
 
-        /**
-         * MapController is needed to set view location and zooming.
-         */
-        mc = mapView.getController();
-        mc.setCenter(point);
-        mc.setZoom(19);
-        
-      //---Add a location marker---
-        MapOverlay mapOverlay = new MapOverlay();
-        List<Overlay> listOfOverlays = mapView.getOverlays();
-        listOfOverlays.clear();
-        listOfOverlays.add(mapOverlay);
         
         
         
-        //http://mobiforge.com/developing/story/using-google-maps-android
-        //display a label with the point's coordinates
-       final Toast myToast = Toast.makeText(getBaseContext(),
-    		   (p1.toString()+","+p2.toString()), Toast.LENGTH_LONG);
-       
-       
-      /* 
-       myToast = Toast.makeText(getBaseContext(), 
-                point.getLatitudeE6() / 1E6 + "," + 
-                point.getLongitudeE6() /1E6 , 
-                Toast.LENGTH_LONG);
- 	   */
         
-        myToast.show();
-        
-       //increase the display time 
-        new CountDownTimer(9000, 1000)
+        int i = 0;
+        while(i < 5)
         {
-            public void onTick(long millisUntilFinished) {myToast.show();}
-            public void onFinish() {myToast.show();}
+        	
+        	//mapView.invalidate();    	
+        	
+        	
+            /**
+             * MapController is needed to set view location and zooming.
+             */
+	        mc = mapView.getController();
+	        mc.setCenter(point);
+	        mc.setZoom(90);
+	        
+	        //---Add a location marker---
+	        MapOverlay mapOverlay = new MapOverlay();
+	        List<Overlay> listOfOverlays = mapView.getOverlays();
+	        listOfOverlays.clear();
+	        
+	        OverlayItem item = new OverlayItem(point, "User1 at location:  ", point.toString());
+	        
+	       
+	        Drawable pin = this.getResources().getDrawable(R.drawable.pushpin);
+	        
+	        //MapOverlay itemzidedOverlay = new MapOverlay(pin,mapView);
+	        
+	       //MapOverlay temp =  new MapOverlay(pin,mapView);
+	        //temp.add(item);
+	        
+	        
+	        listOfOverlays.add(mapOverlay);
+	        
+	        
 
-        }.start();
+	        //http://mobiforge.com/developing/story/using-google-maps-android
+	        //display a label with the point's coordinates
+	       final Toast myToast = Toast.makeText(getBaseContext(),
+	    		   myPoints,Toast.LENGTH_LONG);
+	    		   //(p1.toString()+","+p2.toString()), Toast.LENGTH_LONG);     
+	       
+	       
+	        myToast.show();
+	        
+	        //increase the display time 
+	        new CountDownTimer(9000, 1000)
+	        {
+	            public void onTick(long millisUntilFinished) {myToast.show();}
+	            public void onFinish() {myToast.show();}
+	
+	        }.start();
         
-        mapView.invalidate();
+	        //mapView.invalidate();
+	        
+	        i++;
+	        //////////////////////////////////////////////////////////////////
+	        //See if point has changed
+	        MyRequestFactory requestFactory1 = Util.getRequestFactory(mContext,
+                    MyRequestFactory.class);
+            final CloudTask1Request request2 = requestFactory1.cloudTask1Request();
+            Log.i(TAG, "Sending request to server");
+            request2.queryTasks().fire(new Receiver<List<TaskProxy>>() {
+                private boolean shadow;
+
+				@Override
+				public void onSuccess(List<TaskProxy> taskList) {
+                	 message = "";
+                	 
+                	 
+                	 message="";
+                	 myPoints="";
+                	 //get the Geo point for each user id
+  	    			for (TaskProxy task : taskList) {
+  	    				   	    				 
+  	    				message += task.getId()+","+task.getNote()+",";
+  	    				myPoints += task.getId()+"("+task.getNote()+")\n"; 
+  	    			}
+  	    			
+  	    			
+  	    			
+  	    			
+  	    			tokens = new StringTokenizer(message,",");
+  	    			
+  	    			//get the id of the current user being tracked
+  	    			//we do nothing with it for now
+  	    			tokens.nextToken();
+  	    			
+  	    			//see if the new Geo point obtained is different from the previously 
+  	    			//plotted point
+  	    			Integer p3 = Integer.parseInt(tokens.nextToken());
+  	    			
+  	    			if (p1 == p3)
+  	    			{
+  	    				changedLocation = false;
+  	    			}
+  	    			else
+  	    			{
+  	    				p1 = p3;
+  	    				
+  	    				p2 = Integer.parseInt(tokens.nextToken());
+  	    				
+  	    				point = new GeoPoint(p1,p2);
+  	    				
+  	    				//display the new point to the user....
+  	    				final Toast myToast1 = Toast.makeText(getBaseContext(),
+  	    		    		   "Here is the new point: "+point.toString(),Toast.LENGTH_LONG);
+  	    				
+  	    				myToast1.show();
+  	    			}
+				}
+                
+            });
+            
+            
+         /*   MyLocationOverlay myLocationOverlay = new MyLocationOverlay(this, mapView);
+            mapView.getOverlays().add(myLocationOverlay);
+            myLocationOverlay.enableMyLocation();
+	        
+            listOfOverlays.clear();
+	        listOfOverlays.add(myLocationOverlay);
+	        
+	        */
+        }
     }
 
     @Override
