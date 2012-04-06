@@ -47,9 +47,7 @@ import com.google.web.bindery.requestfactory.shared.Receiver;
 public class CloudTask1Activity extends Activity {
 	
 	
-	final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
-    final Button sayHelloButton = (Button) findViewById(R.id.say_hello);
-    final Button createLocation = (Button) findViewById(R.id.see_map);
+	
      
 	Intent myintent;
 	String result;
@@ -161,14 +159,96 @@ public class CloudTask1Activity extends Activity {
 
     private void setHelloWorldScreenContent() {
         setContentView(R.layout.hello_world);
+        
+        
+        final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
+        final Button sayHelloButton = (Button) findViewById(R.id.say_hello);
+        final Button addTask = (Button) findViewById(R.id.see_map);
+        
+        addTask.setOnClickListener(new OnClickListener(){
 
+			@Override
+			public void onClick(View v) {
+				
+				sayHelloButton.setEnabled(false);
+				addTask.setEnabled(false);
+                
+                helloWorld.setText(R.string.contacting_server);
+                
+                // Use an AsyncTask to avoid blocking the UI thread
+                new AsyncTask<Void, Void, String>() {
+                    private String message;
+
+                                        
+                    protected String doInBackground(Void... arg0) {
+                        MyRequestFactory requestFactory = Util.getRequestFactory(mContext,
+                                MyRequestFactory.class);
+                        final CloudTask1Request request = requestFactory.cloudTask1Request();
+                        Log.i(TAG, "Sending request to server");
+                        
+                            request.createTask().fire(new Receiver<TaskProxy>(){
+                                
+                                @SuppressWarnings("unused")
+    							public void onFailure(Throwable error) {
+                                	
+                                	final Toast myToast = Toast.makeText(getBaseContext(),
+                         	    		   "YOU FAILED TO QUERY DATA!  ERROR: "+error.toString(),Toast.LENGTH_LONG);
+                         	                           	       
+                                	myToast.show();
+                                }
+
+                                
+                               
+
+								@Override
+								public void onSuccess(TaskProxy arg0) {
+									final Toast myToast = Toast.makeText(getBaseContext(),
+	                         	    		   "Task Created Successfully ",Toast.LENGTH_LONG);
+	                         	                           	       
+									myToast.show();
+									
+								}
+								
+								 
+                            });
+							return message;
+                            
+                             
+                    }
+
+                        @Override
+                        protected void onPostExecute(String result) {
+                            helloWorld.setText(result);
+                            sayHelloButton.setEnabled(true);
+                          
+                        	
+                        	 
+                        	
+                        	//Intent intent = new Intent(this, MapsActivity.class);
+      	    		        /*
+      	    		         * Start MapsActivity and wait for the result.
+      	    		         */
+      	    		        //startActivityForResult(intent, 0);
+                            
+                        	
+      	    				
+                        }
+                    }.execute();
+
+			}
+        	
+        	
+        	
+        });
        
 ////////////////////////////////////////////////////////////////////////////////////////////////////
         sayHelloButton.setOnClickListener(new OnClickListener() {
-            
+        	
+        	
+        	
         	public void onClick(View v) {
                 sayHelloButton.setEnabled(false);
-                createLocation.setEnabled(false);
+                
                 helloWorld.setText(R.string.contacting_server);
                 
                 // Use an AsyncTask to avoid blocking the UI thread
@@ -223,6 +303,7 @@ public class CloudTask1Activity extends Activity {
     		  	    			 
     		  	    			intentMaps.putExtra("points", points);
 		  	    				intentMaps.putExtra("message", message);
+		  	    			
 		  	    				
 		  	    				startActivity(intentMaps);
 		  	    				
@@ -238,18 +319,8 @@ public class CloudTask1Activity extends Activity {
                     protected void onPostExecute(String result) {
                         helloWorld.setText(result);
                         sayHelloButton.setEnabled(true);
-                        createLocation.setEnabled(true);
+                      
                     	
-                    	 
-                    	
-                    	//Intent intent = new Intent(this, MapsActivity.class);
-  	    		        /*
-  	    		         * Start MapsActivity and wait for the result.
-  	    		         */
-  	    		        //startActivityForResult(intent, 0);
-                        
-                    	
-  	    				
                     }
                 }.execute();
             }

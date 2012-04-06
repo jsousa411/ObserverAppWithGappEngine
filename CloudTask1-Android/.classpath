@@ -14,5 +14,6 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="src" path="/CloudTask1-AppEngine"/>
+	<classpathentry kind="src" path="/MapActivity"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
