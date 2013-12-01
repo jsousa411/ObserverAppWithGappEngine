@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    	
+         <ListView
+              android:id="@+id/list"
+              android:layout_height="wrap_content"
+              android:layout_width="match_parent">
+         </ListView> 
+          
+	<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+		
+		<Button
+		  android:id="@+id/addnotes"
+		  android:layout_width="wrap_content"
+		  android:layout_height="wrap_content"
+    	  android:layout_gravity="center"
+          android:layout_marginLeft="5dp"
+          android:layout_marginRight="5dp"
+          android:layout_weight="1"
+          android:textColor="#FFFFFF"
+          android:background="#000000"
+		  android:text="@+string/AddObservation"
+		  />
+	</LinearLayout>
+	<TextView
+	  android:id="@+id/targeturi"
+	  android:layout_width="fill_parent"
+	  android:layout_height="wrap_content"
+	  />
+	<ImageView
+            android:id="@+id/imageViewGallery"
+            android:layout_width="32dp"
+            android:layout_height="32dp"            
+            android:layout_marginLeft="9dp"            
+            android:contentDescription="@+string/image_description" />
+ 
+</LinearLayout>

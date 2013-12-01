@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="src" path="endpoint-libs/libmobilebackend-v1/mobilebackend/mobilebackend-v1-generated-source"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry exported="true" kind="con" path="com.google.gdt.eclipse.managedapis.MANAGED_API_CONTAINER/drive-v2r107lv1.14.2-beta"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/JP/workspace/google-play-services_lib/bin/google-play-services_lib.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/JP/git/Cloud_Task/CloudBackendAndroidClient/libs/android-support-v4.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/JP/git/Cloud_Task/CloudBackendAndroidClient/libs/gcm.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/JP/git/Cloud_Task/CloudBackendAndroidClient/.google_apis/guava-gwt-15.0.jar"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>
