@@ -1,0 +1,21 @@
+# view AndroidManifest.xml #generated:77
+-keep class com.google.android.gcm.GCMBroadcastReceiver { <init>(...); }
+
+# view AndroidManifest.xml #generated:75
+-keep class com.google.cloud.backend.android.GCMIntentService { <init>(...); }
+
+# view AndroidManifest.xml #generated:37
+-keep class com.google.cloud.backend.android.sample.guestbook.GuestbookActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:50
+-keep class com.observer.notes.AddUpdateData { <init>(...); }
+
+# view AndroidManifest.xml #generated:46
+-keep class com.observer.notes.ObserverNotes { <init>(...); }
+
+# view AndroidManifest.xml #generated:54
+-keep class com.observer.uploadimages.ImageUpload { <init>(...); }
+
+# onClick res/layout/activity_main.xml #generated:21
+-keepclassmembers class * { *** onSendButtonPressed(...); }
+
