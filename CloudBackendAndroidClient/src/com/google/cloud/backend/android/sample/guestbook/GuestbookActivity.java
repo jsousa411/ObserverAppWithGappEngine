@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.HandlerThread;
 import android.os.Looper;
 //import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,12 +58,16 @@ public class GuestbookActivity extends CloudBackendActivity {
 
   private static final String BROADCAST_PROP_MESSAGE = "message";
 
+  private static final int SELECT_ITEM = 2;
+  
   // UI components
   private TextView tvPosts;
   private EditText etMessage;
   private Button btSend;
   private Button btNotes;
   private Button btnImgs;
+  
+  
   
   // a list of posts on the UI
   List<CloudEntity> posts = new LinkedList<CloudEntity>();
@@ -85,15 +90,17 @@ public class GuestbookActivity extends CloudBackendActivity {
     tvPosts = (TextView) findViewById(R.id.tvPosts);
     etMessage = (EditText) findViewById(R.id.etMessage);
     btSend = (Button) findViewById(R.id.btSend);
-    btnImgs = (Button) findViewById(R.id.btImg);
+    //btnImgs = (Button) findViewById(R.id.btImg);
+    
+    Log.i("GuestBookActivity:  ", "onCreate");
    
   }
   
   @Override
   public void onResume(){
 	  super.onResume();
-	  Toast.makeText(getApplicationContext(),"resuming GuestBook",Toast.LENGTH_LONG).show();  
-	
+	  //Toast.makeText(getApplicationContext(),"resuming GuestBook",Toast.LENGTH_LONG).show();  
+	  Log.i("GuestBookActivity:  ", "onResume");
     
 	  
   }
@@ -118,20 +125,20 @@ public class GuestbookActivity extends CloudBackendActivity {
 	          Intent callObserver = new Intent(getBaseContext(), com.observer.notes.ObserverNotes.class);
 	          
 	          //startActivity(callObserver);        	
-	          this.startActivityForResult(callObserver, RESULT_OK);
+	          this.startActivityForResult(callObserver, SELECT_ITEM);
         	  
 	          
 	          return true; 
-          case R.id.takePicture:
-        	  
-        	  Toast.makeText(getApplicationContext(),"Preparing camera for a picture",Toast.LENGTH_LONG).show();  
-              
-        	  
-	          Intent callImageTaker = new Intent(getBaseContext(), com.observer.uploadimages.ImageUpload.class);
-	          
-	          startActivity(callImageTaker);
-        	  
-        	  return true;
+//          case R.id.takePicture:
+//        	  
+//        	  Toast.makeText(getApplicationContext(),"Preparing camera for a picture",Toast.LENGTH_LONG).show();  
+//              
+//        	  
+//	          Intent callImageTaker = new Intent(getBaseContext(), com.observer.uploadimages.ImageUpload.class);
+//	          
+//	          startActivity(callImageTaker);
+//        	  
+//        	  return true;
           default:  
               return super.onOptionsItemSelected(item);  
       }
@@ -140,6 +147,10 @@ public class GuestbookActivity extends CloudBackendActivity {
   @Override
   protected void onPostCreate() {
     super.onPostCreate();
+    
+    /**********THIS IS THE LINE THAT DISPLAYS ALL THE BROADCASTS
+     * 
+     */
     //listAllPosts();
   }
   
@@ -147,17 +158,22 @@ public class GuestbookActivity extends CloudBackendActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     
+    	Log.i("GuestBookActivity:  ", "onActivityResult");
 	    String result = "";
 	    boolean hasextra = false;
 	    
 	    //try to get result from ItemAdapter
-	    hasextra = getIntent().hasExtra("com.observer.notes");
+	    //hasextra = data.hasExtra("com.observer.notes");
 	    
-	    if(hasextra){
+	    if(requestCode == SELECT_ITEM){
 	  	  
-	    	result = getIntent().getStringArrayExtra("com.observer.notes").toString();
-		      if(result != null)
+	    	
+		      if(resultCode == SELECT_ITEM){
+		    	  result = data.getStringExtra("com.observer.notes");
+		    			  //data.getStringArrayExtra("com.observer.notes").toString();
 		    	  Toast.makeText(getApplicationContext(),"Received: "+result,Toast.LENGTH_LONG).show();
+		    	  etMessage.setText(result);
+		      }
 	    }
   
 	   

@@ -81,6 +81,7 @@ public class CloudEntity {
     return co;
   }
 
+  //sets the database name
   public CloudEntity(String kindName) {
     if (kindName == null || !kindName.matches("\\w+")) {
       throw new IllegalArgumentException("Illegal kind name: " + kindName);

@@ -9,5 +9,7 @@
 	<classpathentry exported="true" kind="lib" path="C:/Users/JP/git/Cloud_Task/CloudBackendAndroidClient/libs/android-support-v4.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/Users/JP/git/Cloud_Task/CloudBackendAndroidClient/libs/gcm.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/Users/JP/git/Cloud_Task/CloudBackendAndroidClient/.google_apis/guava-gwt-15.0.jar"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

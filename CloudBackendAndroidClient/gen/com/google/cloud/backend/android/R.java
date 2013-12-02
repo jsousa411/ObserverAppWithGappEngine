@@ -36,7 +36,6 @@ public final class R {
         public static final int list=0x7f09000f;
         public static final int scrollView1=0x7f090003;
         public static final int takeNotes=0x7f090019;
-        public static final int takePicture=0x7f09001a;
         public static final int targeturi=0x7f090011;
         public static final int textView1=0x7f09000e;
         public static final int tvPosts=0x7f090004;
@@ -45,7 +44,9 @@ public final class R {
         public static final int update_view_all=0x7f09000d;
     }
     public static final class integer {
+        public static final int four_lines=0x7f050002;
         public static final int single_line=0x7f050000;
+        public static final int three_lines=0x7f050001;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;

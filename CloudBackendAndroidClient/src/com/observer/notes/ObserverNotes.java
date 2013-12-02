@@ -108,6 +108,7 @@ public class ObserverNotes extends CloudBackendActivity {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.observer_main);
 
+        Log.i("ObserverNotes:  ", "ONCREATE");
         //Button buttonLoadImage = (Button)findViewById(R.id.loadimage);
         Button addObservation = (Button)findViewById(R.id.addnotes);
        
@@ -146,12 +147,24 @@ public class ObserverNotes extends CloudBackendActivity {
 	
 	
     
-	
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
 	   
 		super.onActivityResult(requestCode, resultCode, data);
 
-		
+		Log.i("ObserverNotes:  ", "onActivityResult");
+		 String result = "";
+		    boolean hasextra = false;
+		    
+		    //try to get result from ItemAdapter
+		    hasextra = data.hasExtra("com.observer.notes");
+		    
+		    if(hasextra){
+		  	  
+		    	result = data.getStringArrayExtra("com.observer.notes").toString();
+			      if(result != null)
+			    	  Toast.makeText(getApplicationContext(),"At Observer notes Received: "+result,Toast.LENGTH_LONG).show();
+		    }
 		 	
 	}
 
@@ -165,8 +178,8 @@ public class ObserverNotes extends CloudBackendActivity {
     public void onResume() {
 		
 		super.onResume();
-		Toast.makeText(getApplicationContext(),"resuming ObserverNotes",Toast.LENGTH_LONG).show();  
-		
+		//Toast.makeText(getApplicationContext(),"resuming ObserverNotes",Toast.LENGTH_LONG).show();  
+		Log.i("ObserverNotes:  ", "onResume");
 		Set_Referash_Data();
 
     }

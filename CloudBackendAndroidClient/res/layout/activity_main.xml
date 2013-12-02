@@ -4,19 +4,39 @@
     android:layout_height="match_parent"
     tools:context=".GuestbookActivity" >
 
-    <EditText
+<!-- <EditText
+    android:id="@+id/etMessage"
+    android:inputType="textMultiLine"  
+    android:lines="2"  
+    android:minLines="2" 
+    android:gravity="top|left"  
+    android:maxLines="2"  
+    android:layout_height="wrap_content"  
+    android:layout_width="wrap_content"  
+    android:scrollbars="vertical"  
+    android:layout_toLeftOf="@+id/btSend"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:ems="10" 
+    >
+    </EditText> -->
+     <EditText
         android:id="@+id/etMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/btSend"
-        android:ems="10"
-        android:inputType="text"
-        android:maxLines="@integer/single_line" >
+        android:ems="10"        
+        
+        android:inputType="textMultiLine"
+        android:lines="@integer/three_lines"
+        android:maxLines="@integer/four_lines" >
 
         <requestFocus />
+        
     </EditText>
+     
 
     <Button
         android:id="@+id/btImg"

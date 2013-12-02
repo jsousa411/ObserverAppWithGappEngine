@@ -16,6 +16,6 @@
 # view AndroidManifest.xml #generated:54
 -keep class com.observer.uploadimages.ImageUpload { <init>(...); }
 
-# onClick res/layout/activity_main.xml #generated:21
+# onClick res/layout/activity_main.xml #generated:41
 -keepclassmembers class * { *** onSendButtonPressed(...); }
 

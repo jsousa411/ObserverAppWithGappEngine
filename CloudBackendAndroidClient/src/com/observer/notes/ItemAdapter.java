@@ -29,7 +29,7 @@ import com.google.cloud.backend.android.sample.guestbook.GuestbookActivity;
 
 
 public class ItemAdapter extends ArrayAdapter<Item> {	
-	
+	private static final int SELECT_ITEM = 2;
 
 	Activity activity;
 	int layoutResourceId;
@@ -105,14 +105,23 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 				Log.i("Notes:  ", tempItem.add_notes.getText().toString());
 			    
 				//return values to main activity
-				Intent intent = new Intent(activity.getApplicationContext(), GuestbookActivity.class);
-			     				 
+				Intent intent = new Intent();//new Intent(activity.getApplicationContext(), GuestbookActivity.class);
+			     	
 				intent.putExtra("com.observer.notes", result);
-				
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				 
 				
-				activity.setResult(Activity.RESULT_OK, intent);
+				if(activity.getParent() == null){
+					activity.setResult(SELECT_ITEM, intent);
+				}else{
+					
+					activity.getParent().setResult(SELECT_ITEM, intent);
+				}
+				
+				
+				 
+				Log.i("ItemAdpater:  ", "Setting Row Result");
+				
+				
 				activity.finish();
 				
 				 

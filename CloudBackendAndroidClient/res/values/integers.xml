@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="single_line">1</integer>
+    <integer name="three_lines">3</integer>
+    <integer name="four_lines">4</integer>
 </resources>
