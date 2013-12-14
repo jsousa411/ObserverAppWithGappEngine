@@ -13,18 +13,36 @@
  */
 package com.google.cloud.backend.android;
 
+
+
+
+
+
+
+
+
+
+
+
 import com.google.api.client.util.DateTime;
 import com.google.cloud.backend.android.mobilebackend.model.EntityDto;
 
+
 import java.util.Date;
+
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
+
  * A class that represents a cloud entity on App Engine Datastore.
  *
  */
+
 public class CloudEntity {
+
+
 
   /**
    * Name of the auto-generated property that has a time stamp of creation.
@@ -41,15 +59,29 @@ public class CloudEntity {
    */
   public static final String PROP_CREATED_BY = "_createdBy";
 
+
+
+
+
   /**
    * Name of the auto-generated property that has updater account name.
    */
   public static final String PROP_UPDATED_BY = "_updatedBy";
 
+
+
   /**
    * Name of the auto-generated property that has userId of the entity owner.
    */
   public static final String PROP_OWNER = "_owner";
+
+
+
+
+
+
+
+
 
   private String id;
 
@@ -81,13 +113,19 @@ public class CloudEntity {
     return co;
   }
 
-  //sets the database name
+
+
+
+
   public CloudEntity(String kindName) {
     if (kindName == null || !kindName.matches("\\w+")) {
       throw new IllegalArgumentException("Illegal kind name: " + kindName);
     }
     this.kindName = kindName;
   }
+
+
+
 
   protected EntityDto getEntityDto() {
     EntityDto co = new EntityDto();
@@ -106,49 +144,105 @@ public class CloudEntity {
     return co;
   }
 
+
+
+
+
+
+
+
   public void put(String key, Object value) {
     properties.put(key, value);
   }
+
+
+
+
+
 
   public Object get(String key) {
     return properties.get(key);
   }
 
+
+
+
   public Object remove(String key) {
     return properties.remove(key);
   }
+
+
+
 
   public Map<String, Object> getProperties() {
     return properties;
   }
 
+
+
+
+
+
+
+
+
   public String getId() {
     return id;
   }
+
+
+
+
+
+
+
 
   public void setId(String id) {
     this.id = id;
   }
 
+
+
   public Date getCreatedAt() {
     return createdAt;
   }
+
+
+
 
   public void setCreatedAt(Date createdAt) {
     this.createdAt = createdAt;
   }
 
+
+
+
+
+
+
+
+
+
   public Date getUpdatedAt() {
     return updatedAt;
   }
+
+
+
+
+
 
   public void setUpdatedAt(Date updatedAt) {
     this.updatedAt = updatedAt;
   }
 
+
+
+
   public String getCreatedBy() {
     return createdBy;
   }
+
 
   public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
@@ -175,8 +269,13 @@ public class CloudEntity {
   }
 
   @Override
+
   public String toString() {
     return "CloudEntity(" + this.getKindName() + "/" + this.getId() + "): " + properties;
+
+
+
+
   }
 
   @Override

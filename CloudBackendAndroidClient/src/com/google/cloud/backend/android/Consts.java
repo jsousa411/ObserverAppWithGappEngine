@@ -23,12 +23,12 @@ public interface Consts {
   /**
    * Set Project ID of your Google APIs Console Project.
    */
-  public static final String PROJECT_ID = "igneous-capsule-379";
+  public static final String PROJECT_ID = "rare-ridge-428";//"igneous-capsule-379";
 
   /**
    * Set Project Number of your Google APIs Console Project.
    */
-  public static final String PROJECT_NUMBER = "404780566684";
+  public static final String PROJECT_NUMBER = "1079543852674";//"404780566684";
 
   /**
    * Set your Web Client ID for authentication at backend.

@@ -100,8 +100,7 @@ public class GuestbookActivity extends CloudBackendActivity {
   public void onResume(){
 	  super.onResume();
 	  //Toast.makeText(getApplicationContext(),"resuming GuestBook",Toast.LENGTH_LONG).show();  
-	  Log.i("GuestBookActivity:  ", "onResume");
-    
+	  Log.i("GuestBookActivity:  ", "onResume");    
 	  
   }
   
@@ -110,7 +109,8 @@ public class GuestbookActivity extends CloudBackendActivity {
       // Inflate the menu; this adds items to the action bar if it is present.  
       getMenuInflater().inflate(R.menu.activity_main, menu);//Menu Resource, Menu  
        
-      return true;  
+      return true; 
+      
   }  
     
   //This is a menu bar listener...if user selects anything in the menu bar this method
@@ -126,8 +126,7 @@ public class GuestbookActivity extends CloudBackendActivity {
 	          
 	          //startActivity(callObserver);        	
 	          this.startActivityForResult(callObserver, SELECT_ITEM);
-        	  
-	          
+        	  	          
 	          return true; 
 //          case R.id.takePicture:
 //        	  
@@ -151,7 +150,7 @@ public class GuestbookActivity extends CloudBackendActivity {
     /**********THIS IS THE LINE THAT DISPLAYS ALL THE BROADCASTS
      * 
      */
-    //listAllPosts();
+    listAllPosts();
   }
   
   @Override
@@ -199,8 +198,13 @@ public class GuestbookActivity extends CloudBackendActivity {
     };
 
     // execute the query with the handler
-    getCloudBackend().listByKind("Guestbook", CloudEntity.PROP_CREATED_AT, Order.DESC, 50,
+    
+      getCloudBackend().listByKind("Guestbook", CloudEntity.PROP_CREATED_AT, Order.DESC, 10,
         Scope.FUTURE_AND_PAST, handler);
+     
+    /*getCloudBackend().listByKind("observerNotes", CloudEntity.PROP_CREATED_AT, Order.DESC, 10,
+        Scope.FUTURE_AND_PAST, handler);
+        */
   }
 
   private void handleEndpointException(IOException e) {
@@ -213,7 +217,7 @@ public class GuestbookActivity extends CloudBackendActivity {
     final StringBuilder sb = new StringBuilder();
     for (CloudEntity post : posts) {
       sb.append(sdf.format(post.getCreatedAt()) + getCreatorName(post) + ": " + post.get("message")
-          + "\n");
+         + "\n");
     }
     tvPosts.setText(sb.toString());
   }
@@ -230,9 +234,20 @@ public class GuestbookActivity extends CloudBackendActivity {
   // post a new message to server
   public void onSendButtonPressed(View view) {
 
-    // create a CloudEntity with the new post
-    CloudEntity newPost = new CloudEntity("Guestbook");
-    newPost.put("message", etMessage.getText().toString());
+//    // create a CloudEntity with the new post
+//    CloudEntity newPost = new CloudEntity("Guestbook");
+//    //CloudEntity newPost = new CloudEntity("observerNotes");
+//    
+//    String parts = etMessage.getText().toString();//.split(",");
+//    newPost.put("message", parts);
+//    //newPost.setUrl(parts[0]);
+//    //newPost.setDetail(parts[2]);
+	  
+	  
+	// create a CloudEntity with the new post
+	    CloudEntity newPost = new CloudEntity("Guestbook");
+	    newPost.put("message", etMessage.getText().toString());
+
 
     // create a response handler that will receive the result or an error
     CloudCallbackHandler<CloudEntity> handler = new CloudCallbackHandler<CloudEntity>() {
@@ -250,6 +265,7 @@ public class GuestbookActivity extends CloudBackendActivity {
       }
     };
 
+     
     // execute the insertion with the handler
     getCloudBackend().insert(newPost, handler);
     btSend.setEnabled(false);

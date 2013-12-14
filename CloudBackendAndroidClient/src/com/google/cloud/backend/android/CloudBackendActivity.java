@@ -18,7 +18,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 
@@ -71,9 +70,7 @@ public class CloudBackendActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    //Toast.makeText(getApplicationContext(),"INSIDE BACKEND CREATE",Toast.LENGTH_LONG).show();  
-    
-        
+
     // init backend
     cloudBackend = new CloudBackendMessaging(this);
 
@@ -133,23 +130,14 @@ public class CloudBackendActivity extends Activity {
   public void onBroadcastMessageReceived(List<CloudEntity> message) {
   }
 
-  @Override
-  public void onResume(){
-	  super.onResume();
-	  //Toast.makeText(getApplicationContext(),"INSIDE BACKEND",Toast.LENGTH_LONG).show();  
-      
-  }
-  
   /**
    * Handles callback from Intents like authorization request or account
    * picking.
    */
   @Override
-  //protected final void onActivityResult(int requestCode, int resultCode, Intent data) {
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 
-   
     switch (requestCode) {
     case REQUEST_ACCOUNT_PICKER:
       if (data != null && data.getExtras() != null) {
