@@ -2,12 +2,16 @@ package com.observer.notes;
 
  
 
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
 import com.google.cloud.backend.android.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.webkit.URLUtil;
 import android.widget.Button;
@@ -16,7 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class AddUpdateData extends Activity{
-	
+	private static final int BROADCAST_INSERT = 3;
 	/*
 	 item.setId(idno);
     	    item.setName(name);
@@ -77,6 +81,114 @@ public class AddUpdateData extends Activity{
 			    
 			setResult(RESULT_OK, update_item);
 			finish();
+			
+		}
+		else if(called_from.equalsIgnoreCase("broadcasted")){
+			//Guestbook
+			String messages = getIntent().getStringExtra("Guestbook").toString();			
+			String[] individualItems ;
+			String[] itemsCasted = SplitUsingTokenizer(messages,"|");
+			String itemName = "";
+			Item  tempItem;
+			int i = 0;
+			int j = 0;
+			int countRemoved = 0;
+			int[] removeIndex = new int[itemsCasted.length];
+			ArrayList<Item> item_list;// = new ArrayList<Item>();
+			ArrayList<Item> newItems;
+			
+			
+			Log.i("Inserting DATA:  ", messages);					
+			
+			//get items from database
+			item_list = dbHandler.Get_items();
+			//verify which item is not in database
+			
+			i=0;
+			while(i< item_list.size()){
+				
+				tempItem = item_list.get(i);
+				if(tempItem.getKeyName().contains("Canada")){
+					
+					dbHandler.Delete_Item(tempItem.getId());
+				}
+				else if(tempItem.getKeyName().contains("a name")){
+					
+					dbHandler.Delete_Item(tempItem.getId());
+				}
+				else if(tempItem.getKeyName().contains("Alagoas")){
+					
+					dbHandler.Delete_Item(tempItem.getId());
+				}
+				else{}
+				
+				i++;
+			}
+			
+			i=0;
+			 
+			j = 0;
+				
+			while( j < itemsCasted.length){
+				removeIndex[j]	= -1;
+				//itemsCasted[j].replace(",", "").trim();
+				individualItems =  SplitUsingTokenizer(itemsCasted[j],"@#");//.toString().split("@#");
+				
+				Log.i("value of individualItems[0].toString() is: ",individualItems[0].toString());
+				while(i < item_list.size() ){
+					
+					tempItem = item_list.get(i);
+										
+				   
+					if(individualItems[1].contains(tempItem.getKeyName())){
+						if(removeIndex[j] == -1)
+						{
+							removeIndex[j]	= j;
+							countRemoved++;
+						}
+					}
+					
+					
+					i++;
+				}
+				i=0;
+				j++;
+				
+			}
+				 
+			
+			//insert items missing from database
+			
+			if(countRemoved < itemsCasted.length){
+				i=0;
+				while(i < itemsCasted.length){
+					
+					if(removeIndex[i]  == -1){
+						//tempItem = item_list.get(i);
+						individualItems =  SplitUsingTokenizer(itemsCasted[i],"@#");
+						tempItem = new Item(individualItems[1],individualItems[2],individualItems[0]);
+						
+						dbHandler.Add_item(tempItem);
+						
+						Log.i("Inserting item:  ", tempItem.getKeyName());
+					}
+					i++;
+				}
+			}
+			
+			Intent finish_intent = new Intent();			
+			
+			finish_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			
+			if(this.getParent()== null){
+				this.setResult(BROADCAST_INSERT,finish_intent);
+			}
+			else{
+				
+				this.getParent().setResult(BROADCAST_INSERT, intent);
+			}
+			
+			this.finish();
 			
 		}
 		else {
@@ -259,6 +371,19 @@ public class AddUpdateData extends Activity{
 
 		
     }//end OnCreate()
+    
+    
+    public static String[] SplitUsingTokenizer(String Subject, String Delimiters) 
+    {
+     StringTokenizer StrTkn = new StringTokenizer(Subject, Delimiters);
+     ArrayList<String> ArrLis = new ArrayList<String>(Subject.length());
+     while(StrTkn.hasMoreTokens())
+     {
+       ArrLis.add(StrTkn.nextToken());
+     }
+     return ArrLis.toArray(new String[0]);
+    }
+    
     
     public void Is_Valid_Name(EditText edt) throws NumberFormatException {
     	

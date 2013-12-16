@@ -116,16 +116,11 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 					
 					activity.getParent().setResult(SELECT_ITEM, intent);
 				}
-				
-				
 				 
 				Log.i("ItemAdpater:  ", "Setting Row Result");
-				
-				
+								
 				activity.finish();
-				
 				 
-			     
 			}
 
 			private Context getApplicationContext() {

@@ -37,6 +37,8 @@ import com.google.cloud.backend.android.CloudQuery.Order;
 import com.google.cloud.backend.android.CloudQuery.Scope;
 import com.google.cloud.backend.android.MyHandler;
 import com.google.cloud.backend.android.R;
+import com.observer.notes.AddUpdateData;
+import com.observer.notes.ObserverNotes;
 //import com.observer.notes.ObserverNotes;
 
 import java.io.IOException;
@@ -59,6 +61,7 @@ public class GuestbookActivity extends CloudBackendActivity {
   private static final String BROADCAST_PROP_MESSAGE = "message";
 
   private static final int SELECT_ITEM = 2;
+  private static final int BROADCAST_INSERT = 3;
   
   // UI components
   private TextView tvPosts;
@@ -170,9 +173,15 @@ public class GuestbookActivity extends CloudBackendActivity {
 		      if(resultCode == SELECT_ITEM){
 		    	  result = data.getStringExtra("com.observer.notes");
 		    			  //data.getStringArrayExtra("com.observer.notes").toString();
-		    	  Toast.makeText(getApplicationContext(),"Received: "+result,Toast.LENGTH_LONG).show();
+		    	  //Toast.makeText(getApplicationContext(),"Received: "+result,Toast.LENGTH_LONG).show();
+		    	  Log.i("Returned from Note Taker:  ", result);
 		    	  etMessage.setText(result);
 		      }
+	    }
+	    else if( requestCode == BROADCAST_INSERT){
+	    	Log.i("Just saved data in database", "NICE!");
+	    	  etMessage.setText("");
+	    	
 	    }
   
 	   
@@ -199,12 +208,16 @@ public class GuestbookActivity extends CloudBackendActivity {
 
     // execute the query with the handler
     
-      getCloudBackend().listByKind("Guestbook", CloudEntity.PROP_CREATED_AT, Order.DESC, 10,
-        Scope.FUTURE_AND_PAST, handler);
+    //  getCloudBackend().listByKind("Guestbook", CloudEntity.PROP_CREATED_AT, Order.DESC, 10,
+    //    Scope.FUTURE_AND_PAST, handler);
      
-    /*getCloudBackend().listByKind("observerNotes", CloudEntity.PROP_CREATED_AT, Order.DESC, 10,
-        Scope.FUTURE_AND_PAST, handler);
-        */
+    //getCloudBackend().listByKind("Jt", CloudEntity.PROP_CREATED_AT, Order.DESC, 10,
+    //    Scope.FUTURE_AND_PAST, handler);
+    
+    //NewSchema
+    getCloudBackend().listByKind("ObserverNotesTaken", CloudEntity.PROP_CREATED_AT, Order.DESC, 10,
+    	        Scope.FUTURE_AND_PAST, handler);
+    	     
   }
 
   private void handleEndpointException(IOException e) {
@@ -215,11 +228,43 @@ public class GuestbookActivity extends CloudBackendActivity {
   // convert posts into string and update UI
   private void updateGuestbookUI() {
     final StringBuilder sb = new StringBuilder();
+     
+    String getBroadcast = "";
+    
+     
     for (CloudEntity post : posts) {
-      sb.append(sdf.format(post.getCreatedAt()) + getCreatorName(post) + ": " + post.get("message")
+      sb.append(sdf.format(post.getCreatedAt()) + getCreatorName(post) + ": " + post.get("url")
          + "\n");
+      
+//      save = post.get("_name").toString();
+      //temp.append( 
+      if(getBroadcast == ""){
+    	  getBroadcast += post.get("url").toString()+"@#"+
+			        post.get("name").toString()+"@#"+
+			        post.get("notes").toString();
+      }
+      else{
+	      getBroadcast += "|"+  post.get("url").toString()+"@#"+
+				        post.get("name").toString()+"@#"+
+				        post.get("notes").toString();
+      }
     }
+    
+    
+    /*
+     newPost.put("message", etMessage.getText().toString());
+	    newPost.put("_url",parts[0]);//url from listview
+	    newPost.put("_name",parts[1]);//name text field from list view
+	    newPost.put("_notes",parts[2]);//other notes 
+     
+     */
     tvPosts.setText(sb.toString());
+    Intent intent=new Intent(getBaseContext(),AddUpdateData.class);
+	intent.putExtra("UPDATE", "broadcasted");
+	intent.putExtra("Guestbook", getBroadcast);//pass data to be stored in DB
+	intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	//startActivity(intent);
+	startActivityForResult(intent, BROADCAST_INSERT);
   }
 
   // removing the domain name part from email address
@@ -238,15 +283,19 @@ public class GuestbookActivity extends CloudBackendActivity {
 //    CloudEntity newPost = new CloudEntity("Guestbook");
 //    //CloudEntity newPost = new CloudEntity("observerNotes");
 //    
-//    String parts = etMessage.getText().toString();//.split(",");
+    String[] parts = etMessage.getText().toString().split(",");
 //    newPost.put("message", parts);
 //    //newPost.setUrl(parts[0]);
 //    //newPost.setDetail(parts[2]);
 	  
 	  
 	// create a CloudEntity with the new post
-	    CloudEntity newPost = new CloudEntity("Guestbook");
+	    //CloudEntity newPost = new CloudEntity("Guestbook");
+	  CloudEntity newPost = new CloudEntity("ObserverNotesTaken");
 	    newPost.put("message", etMessage.getText().toString());
+	    newPost.put("url",parts[0]);//url from listview
+	    newPost.put("name",parts[1]);//name text field from list view
+	    newPost.put("notes",parts[2]);//other notes
 
 
     // create a response handler that will receive the result or an error

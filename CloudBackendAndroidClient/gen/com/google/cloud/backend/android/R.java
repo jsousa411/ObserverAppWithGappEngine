@@ -16,32 +16,31 @@ public final class R {
         public static final int ic_launcher=0x7f020002;
     }
     public static final class id {
-        public static final int add_data_notes=0x7f090006;
-        public static final int add_name=0x7f090005;
-        public static final int add_save_btn=0x7f090009;
-        public static final int add_url=0x7f090007;
-        public static final int add_view=0x7f090008;
-        public static final int add_view_all=0x7f09000a;
-        public static final int addnotes=0x7f090010;
-        public static final int btImg=0x7f090002;
+        public static final int add_data_notes=0x7f090005;
+        public static final int add_name=0x7f090004;
+        public static final int add_save_btn=0x7f090008;
+        public static final int add_url=0x7f090006;
+        public static final int add_view=0x7f090007;
+        public static final int add_view_all=0x7f090009;
+        public static final int addnotes=0x7f09000f;
         public static final int btSend=0x7f090001;
-        public static final int btn_delete=0x7f090018;
-        public static final int btn_update=0x7f090017;
+        public static final int btn_delete=0x7f090017;
+        public static final int btn_update=0x7f090016;
         public static final int etMessage=0x7f090000;
-        public static final int imageViewGallery=0x7f090012;
-        public static final int item_id=0x7f090013;
-        public static final int item_name_txt=0x7f090014;
-        public static final int item_notes_txt=0x7f090015;
-        public static final int item_url_txt=0x7f090016;
-        public static final int list=0x7f09000f;
-        public static final int scrollView1=0x7f090003;
-        public static final int takeNotes=0x7f090019;
-        public static final int targeturi=0x7f090011;
-        public static final int textView1=0x7f09000e;
-        public static final int tvPosts=0x7f090004;
-        public static final int update_btn=0x7f09000c;
-        public static final int update_view=0x7f09000b;
-        public static final int update_view_all=0x7f09000d;
+        public static final int imageViewGallery=0x7f090011;
+        public static final int item_id=0x7f090012;
+        public static final int item_name_txt=0x7f090013;
+        public static final int item_notes_txt=0x7f090014;
+        public static final int item_url_txt=0x7f090015;
+        public static final int list=0x7f09000e;
+        public static final int scrollView1=0x7f090002;
+        public static final int takeNotes=0x7f090018;
+        public static final int targeturi=0x7f090010;
+        public static final int textView1=0x7f09000d;
+        public static final int tvPosts=0x7f090003;
+        public static final int update_btn=0x7f09000b;
+        public static final int update_view=0x7f09000a;
+        public static final int update_view_all=0x7f09000c;
     }
     public static final class integer {
         public static final int four_lines=0x7f050002;

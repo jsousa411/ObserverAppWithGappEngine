@@ -23,17 +23,17 @@ public interface Consts {
   /**
    * Set Project ID of your Google APIs Console Project.
    */
-  public static final String PROJECT_ID = "rare-ridge-428";//"igneous-capsule-379";
+  public static final String PROJECT_ID = "voltaic-signal-429";//"rare-ridge-428";//"igneous-capsule-379";
 
   /**
    * Set Project Number of your Google APIs Console Project.
    */
-  public static final String PROJECT_NUMBER = "1079543852674";//"404780566684";
+  public static final String PROJECT_NUMBER = "957527413680";//"1079543852674";//"404780566684";
 
   /**
    * Set your Web Client ID for authentication at backend.
    */
-  public static final String WEB_CLIENT_ID = "AIzaSyBjEtNQllFcgWqOAkkxRUmNU2mUlUTdl8Q";
+  public static final String WEB_CLIENT_ID = "AIzaSyBpkLY0lnEWICwTbL0xLbPJH0TJCRnQy2k";//"AIzaSyDgQrxeHPGQ-wO7nzRHn47QstyBBeKHnUk";// "AIzaSyBjEtNQllFcgWqOAkkxRUmNU2mUlUTdl8Q";
 
   /**
    * Set default user authentication enabled or disabled.
