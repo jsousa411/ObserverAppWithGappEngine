@@ -1,3 +1,14 @@
+/*
+ * ItemAdapter.java
+ * 
+ * SFSU Fall 2013
+ * CSC 875 - Term Project
+ * Joao Sousa
+ * Notes:  This file contains the code that performs the CRUD
+ * of the application
+ * 
+ * 12/17/2013
+ */
 package com.observer.notes;
 
 import android.app.Activity;
@@ -5,6 +16,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -167,9 +179,12 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 					    // MyDataObject.remove(positionToRemove);
 					    DatabaseHandler dBHandler = new DatabaseHandler(
 						    activity.getApplicationContext());
+					    //dBHandler.Deleted_Item_Marked(item_id);
 					    dBHandler.Delete_Item(item_id);
 					    //ObserverNotes.this.onResume();
 					   
+					   
+					    
 					    //com.observer.notes.ObserverNotes.this.onResume();
 					    
 	

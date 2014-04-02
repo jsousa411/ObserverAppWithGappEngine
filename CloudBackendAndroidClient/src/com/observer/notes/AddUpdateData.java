@@ -1,6 +1,16 @@
+/*
+ * AddUpdate.java
+ * 
+ * SFSU Fall 2013
+ * CSC 875 - Term Project
+ * Joao Sousa
+ * Notes:  This file contains the code used to insert data 
+ * via Intents from Guestbook.
+ * 12/17/2013 
+ * 
+ */
 package com.observer.notes;
 
- 
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -101,29 +111,30 @@ public class AddUpdateData extends Activity{
 			Log.i("Inserting DATA:  ", messages);					
 			
 			//get items from database
-			item_list = dbHandler.Get_items();
+			item_list = dbHandler.Get_All_items();
 			//verify which item is not in database
-			
-			i=0;
-			while(i< item_list.size()){
+	
+			//this code is used to update the database manually.  Leave it for debugging..
+			//i=0;
+			//while(i< item_list.size()){
 				
-				tempItem = item_list.get(i);
-				if(tempItem.getKeyName().contains("Canada")){
-					
-					dbHandler.Delete_Item(tempItem.getId());
-				}
-				else if(tempItem.getKeyName().contains("a name")){
-					
-					dbHandler.Delete_Item(tempItem.getId());
-				}
-				else if(tempItem.getKeyName().contains("Alagoas")){
-					
-					dbHandler.Delete_Item(tempItem.getId());
-				}
-				else{}
+				//tempItem = item_list.get(i);
+//				if(tempItem.getKeyName().contains("whitepaper")){
+//					
+//					dbHandler.Deleted_Item_Marked(tempItem.getId());
+//				}
+//				else if(tempItem.getKeyName().trim().length() == 0 ){
+//					
+//					dbHandler.Deleted_Item_Marked(tempItem.getId());
+//				}
+//				else if(tempItem.getKeyName().contains("pear")){
+//					
+//					dbHandler.Deleted_Item_Marked(tempItem.getId());
+//				}
+//				else{}
 				
-				i++;
-			}
+				//i++;
+			//}
 			
 			i=0;
 			 
@@ -137,8 +148,7 @@ public class AddUpdateData extends Activity{
 				Log.i("value of individualItems[0].toString() is: ",individualItems[0].toString());
 				while(i < item_list.size() ){
 					
-					tempItem = item_list.get(i);
-										
+					tempItem = item_list.get(i);										
 				   
 					if(individualItems[1].contains(tempItem.getKeyName())){
 						if(removeIndex[j] == -1)
@@ -166,7 +176,7 @@ public class AddUpdateData extends Activity{
 					if(removeIndex[i]  == -1){
 						//tempItem = item_list.get(i);
 						individualItems =  SplitUsingTokenizer(itemsCasted[i],"@#");
-						tempItem = new Item(individualItems[1],individualItems[2],individualItems[0]);
+						tempItem = new Item(individualItems[1],individualItems[2],individualItems[0],"");
 						
 						dbHandler.Add_item(tempItem);
 						
@@ -255,7 +265,7 @@ public class AddUpdateData extends Activity{
 				
 				
 				dbResult = dbHandler.Add_item(new Item(valid_name,
-					    valid_data_notes, valid_url));
+					    valid_data_notes, valid_url,""));
 				
 			    if( dbResult == 1){
 			    	
@@ -385,6 +395,9 @@ public class AddUpdateData extends Activity{
     }
     
     
+    //this method's code was turned off because it was causing errors
+    //even when the data was valid.  Leave it for now, but will pick up 
+    //the functionality later.
     public void Is_Valid_Name(EditText edt) throws NumberFormatException {
     	
     	valid_name = edt.getText().toString();
@@ -403,6 +416,10 @@ public class AddUpdateData extends Activity{
 
     }
     
+
+    //this method's code was turned off because it was causing errors
+    //even when the data was valid.  Leave it for now, but will pick up 
+    //the functionality later.
     public void Is_Valid_DataNotes(EditText edt) throws NumberFormatException {
 		
     	valid_data_notes = edt.getText().toString();
@@ -419,6 +436,10 @@ public class AddUpdateData extends Activity{
 
     }
     
+
+    //this method's code was turned off because it was causing errors
+    //even when the data was valid.  Leave it for now, but will pick up 
+    //the functionality later.
     public void Is_Valid_Url(EditText edt) throws NumberFormatException {
     	 
     	valid_url = edt.getText().toString();
@@ -435,6 +456,7 @@ public class AddUpdateData extends Activity{
 
     }
     
+    //User wants to return to previous activity
     @Override
     public void onBackPressed() {        
     	super.onBackPressed();
@@ -444,12 +466,15 @@ public class AddUpdateData extends Activity{
     	finish();
     }
     
+    //User clicked the Pencil Image or Add Notes button
     public void Set_Add_Update_Screen() {
 
+    	//text fields for user to insert data
     	add_name = (EditText) findViewById(R.id.add_name);
     	add_data_notes = (EditText) findViewById(R.id.add_data_notes);
     	add_url = (EditText) findViewById(R.id.add_url);
 
+    	//buttons for user to interact with
     	add_save_btn = (Button) findViewById(R.id.add_save_btn);
     	update_btn = (Button) findViewById(R.id.update_btn);
     	add_view_all = (Button) findViewById(R.id.add_view_all);
@@ -463,12 +488,14 @@ public class AddUpdateData extends Activity{
 
     }
 
+    //display a message to the user
     public void Show_Toast(String msg) {
     	
     	Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
     	
     }
 
+    //Display a slate clean screen for a new set of notes to be added
     public void Reset_Text() {
 
 		add_name.getText().clear();

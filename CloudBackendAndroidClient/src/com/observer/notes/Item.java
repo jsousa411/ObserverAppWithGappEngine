@@ -1,3 +1,14 @@
+/*
+ * Item.java
+ * 
+ * SFSU Fall 2013
+ * CSC 875 - Term Project
+ * Joao Sousa
+ * Notes:  This file contains the code for the data structure object.
+ * It gets and sets the data for each of the object's data field
+ * 
+ * 12/17/2013
+ */
 package com.observer.notes;
 
 import java.io.Serializable;
@@ -19,6 +30,7 @@ public class Item implements Serializable {
 	public String _other_notes; 
 	public String _image_url;
 	public String _date_taken;
+	public String _deleted;
 
 //    public Item(int id, String icon_file, String name, String details) {
 //
@@ -37,7 +49,7 @@ public class Item implements Serializable {
     public Item(int id, String icon_file,   String details,
     		String key_name, String taxon, String common, String lifeform,
     		String status, String family, String bloom, String data_notes,
-    			String other_notes, String image_url, String date_taken) {
+    			String other_notes, String image_url, String date_taken, String Deleted) {
 
         _id = id;
         _icon_file = icon_file;        
@@ -54,13 +66,15 @@ public class Item implements Serializable {
     	_other_notes = other_notes; 
     	_image_url = image_url;
     	_date_taken = date_taken;
+    	_deleted = Deleted;
+    	
 
     }
     
     public Item( int id,  
     			 String key_name, 	 String taxon, 		String common, 	String lifeform,
     			 String status, 	 String family, 	String bloom, 	String data_notes,
-    			 String other_notes, String image_url, 	String date_taken) {
+    			 String other_notes, String image_url, 	String date_taken, String Deleted) {
 
         _id = id;
          
@@ -75,6 +89,7 @@ public class Item implements Serializable {
     	_other_notes = other_notes; 
     	_image_url = image_url;
     	_date_taken = date_taken;
+    	_deleted = Deleted;
 
     }
     
@@ -94,11 +109,12 @@ public class Item implements Serializable {
 			_other_notes = ""; 
 			_image_url = image_url;
 			_date_taken = "";
+			_deleted = "";
 	
 	}
 
     //this is used for new items being added to the database
-    public Item( String key_name, String data_notes, String image_url) {
+    public Item( String key_name, String data_notes, String image_url, String deleted) {
 
 	   	_id = -1;
 	    
@@ -113,6 +129,7 @@ public class Item implements Serializable {
 		_other_notes = ""; 
 		_image_url = image_url;
 		_date_taken = "";
+		_deleted = deleted;
 
     }
 
@@ -130,7 +147,10 @@ public class Item implements Serializable {
 	    
     }
     
-   
+   public void setDeleted(String deleteValue){
+	   
+	   _deleted = deleteValue;
+   }
     
     public void setDetail( String details)
     {
@@ -162,6 +182,10 @@ public class Item implements Serializable {
     	this._key_name = key_name;
     }
 
+    public String getDeleted(){
+    	
+    	return this._deleted;
+    }
     public String getTaxon()
     {
     	return this._taxon;

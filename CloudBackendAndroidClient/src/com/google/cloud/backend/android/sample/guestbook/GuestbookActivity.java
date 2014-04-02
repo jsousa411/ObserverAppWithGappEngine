@@ -62,13 +62,13 @@ public class GuestbookActivity extends CloudBackendActivity {
 
   private static final int SELECT_ITEM = 2;
   private static final int BROADCAST_INSERT = 3;
-  
+  private static int BROADCAST_SET = 0;
   // UI components
   private TextView tvPosts;
   private EditText etMessage;
   private Button btSend;
-  private Button btNotes;
-  private Button btnImgs;
+  //private Button btNotes;
+  private Button btnImgs; //image button was turned off
   
   
   
@@ -88,12 +88,12 @@ public class GuestbookActivity extends CloudBackendActivity {
     Looper mLooper = mainThread.getLooper(); 
     MyHandler mHandler = new MyHandler(mLooper); 
 
-    //Toast.makeText(getApplicationContext(),"INSIDE Guestbook CREATE",Toast.LENGTH_LONG).show();  
+    
     
     tvPosts = (TextView) findViewById(R.id.tvPosts);
     etMessage = (EditText) findViewById(R.id.etMessage);
     btSend = (Button) findViewById(R.id.btSend);
-    //btnImgs = (Button) findViewById(R.id.btImg);
+    
     
     Log.i("GuestBookActivity:  ", "onCreate");
    
@@ -131,16 +131,19 @@ public class GuestbookActivity extends CloudBackendActivity {
 	          this.startActivityForResult(callObserver, SELECT_ITEM);
         	  	          
 	          return true; 
-//          case R.id.takePicture:
-//        	  
-//        	  Toast.makeText(getApplicationContext(),"Preparing camera for a picture",Toast.LENGTH_LONG).show();  
-//              
-//        	  
-//	          Intent callImageTaker = new Intent(getBaseContext(), com.observer.uploadimages.ImageUpload.class);
-//	          
-//	          startActivity(callImageTaker);
-//        	  
-//        	  return true;
+	          
+//The picture functionality was commented out since the upload portion did not work with 
+//Jelly Bean 4.1.2 for Android.	    
+          case R.id.takePicture:
+        	  
+        	  Toast.makeText(getApplicationContext(),"Preparing camera for a picture",Toast.LENGTH_LONG).show();  
+              
+        	  
+	          Intent callImageTaker = new Intent(getBaseContext(), com.observer.uploadimages.ImageUpload.class);
+	          
+	          startActivity(callImageTaker);
+        	  
+        	  return true;
           default:  
               return super.onOptionsItemSelected(item);  
       }
@@ -156,6 +159,7 @@ public class GuestbookActivity extends CloudBackendActivity {
     listAllPosts();
   }
   
+  //Returning to main screen from other activities.
   @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
@@ -164,20 +168,22 @@ public class GuestbookActivity extends CloudBackendActivity {
 	    String result = "";
 	    boolean hasextra = false;
 	    
-	    //try to get result from ItemAdapter
-	    //hasextra = data.hasExtra("com.observer.notes");
-	    
+	    //did the user selected an item from the Listview to be broadcasted?
 	    if(requestCode == SELECT_ITEM){
 	  	  
 	    	
+	    		//make sure the result was set
 		      if(resultCode == SELECT_ITEM){
 		    	  result = data.getStringExtra("com.observer.notes");
 		    			  //data.getStringArrayExtra("com.observer.notes").toString();
 		    	  //Toast.makeText(getApplicationContext(),"Received: "+result,Toast.LENGTH_LONG).show();
 		    	  Log.i("Returned from Note Taker:  ", result);
 		    	  etMessage.setText(result);
+		    	  BROADCAST_SET = 1;
 		      }
 	    }
+	    //otherwise the system attempted to insert new items into teh database
+	    //based on the reent broadcast received
 	    else if( requestCode == BROADCAST_INSERT){
 	    	Log.i("Just saved data in database", "NICE!");
 	    	  etMessage.setText("");
@@ -208,13 +214,17 @@ public class GuestbookActivity extends CloudBackendActivity {
 
     // execute the query with the handler
     
+    //This is the original select statement to fetch data from the Cloud database
+    //Notice the table name, "Guestbook."
     //  getCloudBackend().listByKind("Guestbook", CloudEntity.PROP_CREATED_AT, Order.DESC, 10,
     //    Scope.FUTURE_AND_PAST, handler);
      
+    //This was a trial query to fetch data from the Cloud database
+    //notice the table name, "Jt."
     //getCloudBackend().listByKind("Jt", CloudEntity.PROP_CREATED_AT, Order.DESC, 10,
     //    Scope.FUTURE_AND_PAST, handler);
     
-    //NewSchema
+    //Latest table being used
     getCloudBackend().listByKind("ObserverNotesTaken", CloudEntity.PROP_CREATED_AT, Order.DESC, 10,
     	        Scope.FUTURE_AND_PAST, handler);
     	     
@@ -231,40 +241,40 @@ public class GuestbookActivity extends CloudBackendActivity {
      
     String getBroadcast = "";
     
-     
-    for (CloudEntity post : posts) {
-      sb.append(sdf.format(post.getCreatedAt()) + getCreatorName(post) + ": " + post.get("url")
-         + "\n");
-      
-//      save = post.get("_name").toString();
-      //temp.append( 
-      if(getBroadcast == ""){
-    	  getBroadcast += post.get("url").toString()+"@#"+
-			        post.get("name").toString()+"@#"+
-			        post.get("notes").toString();
-      }
-      else{
-	      getBroadcast += "|"+  post.get("url").toString()+"@#"+
+    if(BROADCAST_SET == 0){
+	     //loop to display every message received from the cloud
+	    for (CloudEntity post : posts) {
+	      sb.append(sdf.format(post.getCreatedAt()) + getCreatorName(post) + ": " + post.get("name")
+	         + "\n");
+	      
+	      //break down the messages received into tokens and 
+	      //parse them to make it insertable into the database
+	      if(getBroadcast == ""){
+	    	  //this is the first item
+	    	  getBroadcast += post.get("url").toString()+"@#"+
 				        post.get("name").toString()+"@#"+
 				        post.get("notes").toString();
-      }
+	      }
+	      else{
+	    	  //these are the remaining items
+		      getBroadcast += "|"+  post.get("url").toString()+"@#"+
+					        post.get("name").toString()+"@#"+
+					        post.get("notes").toString();
+	      }
+	    }
+	    
+	    
+	    //set the text view section to display broadcast
+	    tvPosts.setText(sb.toString());
+	    
+	    //start intent to insert broadcasted messages into database
+	    Intent intent=new Intent(getBaseContext(),AddUpdateData.class);
+		intent.putExtra("UPDATE", "broadcasted");
+		intent.putExtra("Guestbook", getBroadcast);//pass data to be stored in DB
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		//startActivity(intent);
+		startActivityForResult(intent, BROADCAST_INSERT);
     }
-    
-    
-    /*
-     newPost.put("message", etMessage.getText().toString());
-	    newPost.put("_url",parts[0]);//url from listview
-	    newPost.put("_name",parts[1]);//name text field from list view
-	    newPost.put("_notes",parts[2]);//other notes 
-     
-     */
-    tvPosts.setText(sb.toString());
-    Intent intent=new Intent(getBaseContext(),AddUpdateData.class);
-	intent.putExtra("UPDATE", "broadcasted");
-	intent.putExtra("Guestbook", getBroadcast);//pass data to be stored in DB
-	intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-	//startActivity(intent);
-	startActivityForResult(intent, BROADCAST_INSERT);
   }
 
   // removing the domain name part from email address
@@ -284,10 +294,7 @@ public class GuestbookActivity extends CloudBackendActivity {
 //    //CloudEntity newPost = new CloudEntity("observerNotes");
 //    
     String[] parts = etMessage.getText().toString().split(",");
-//    newPost.put("message", parts);
-//    //newPost.setUrl(parts[0]);
-//    //newPost.setDetail(parts[2]);
-	  
+
 	  
 	// create a CloudEntity with the new post
 	    //CloudEntity newPost = new CloudEntity("Guestbook");
@@ -303,8 +310,12 @@ public class GuestbookActivity extends CloudBackendActivity {
       @Override
       public void onComplete(final CloudEntity result) {
         posts.add(0, result);
-        updateGuestbookUI();
+        
         etMessage.setText("");
+        BROADCAST_SET = 0;
+        
+        updateGuestbookUI();
+        //set the text view section to display broadcast
         btSend.setEnabled(true);
       }
 
@@ -318,6 +329,7 @@ public class GuestbookActivity extends CloudBackendActivity {
     // execute the insertion with the handler
     getCloudBackend().insert(newPost, handler);
     btSend.setEnabled(false);
+    
   }
 
   // handles broadcast message and show a toast

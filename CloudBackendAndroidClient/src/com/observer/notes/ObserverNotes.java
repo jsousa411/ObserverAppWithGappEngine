@@ -1,3 +1,20 @@
+/*
+ * ObserverNotes.java
+ * 
+ * SFSU Fall 2013
+ * CSC 875 - Term Project
+ * Joao Sousa
+ * Notes:  This file contains the code for the main user's interface with the 
+ * project's data, which is displayed in a listview.
+ * 
+ * Through this application the user is able to add, delete, update and select
+ * a data record.  The data record that is selected gets passed back to the main
+ * screen in GuestbookActivity for a possible broadcast.
+ * 
+ * 12/17/2013
+ */
+
+
 package com.observer.notes;
 
 import java.io.BufferedReader;
@@ -69,37 +86,46 @@ import com.google.cloud.backend.android.R;
 
 @SuppressWarnings("unused")
 public class ObserverNotes extends CloudBackendActivity {
-	private static final String TAG = "CALL_CAMERA_FROM_ObserverNotes";
-	private static final int CAPTURE_IMAGE_ACTIVITY_REQ = 0;
+	private static final String TAG = "CALL_CAMERA_FROM_ObserverNotes";//this was an attempt to get picture taken from Observernotes
+																		
+	private static final int CAPTURE_IMAGE_ACTIVITY_REQ = 0;  //also not used
 	private static int RESULT_LOAD_IMAGE = 1;//activity state for loading an image
 	private static final int SELECT_PICTURE = 1;
 	private static final int SELECT_ITEM = 2;
-	private static final String ITEM_FOUND = "itemFound";
-	private static final URI SERVER_URL = null;
-    private String selectedImagePath;
-	
-	ListView listView;
-	Item anItem;
-	
+	private String selectedImagePath;
 	//Uri fileUri;
-	ImageView photoImage = null;
-	File file;
-	TextView textTargetUri;
-	ImageView imgView1;
-	ObserverNotes_Model userNotes;
-	
-	DatabaseHandler db;
-	Activity mCurrentActivity;
-	ItemAdapter adapter;
-	
-	final String[] columns = { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID };
+		ImageView photoImage = null;
+		File file;
+		TextView textTargetUri;
+		ImageView imgView1;
+		
+		final String[] columns = { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID };
 
-    final String orderBy = MediaStore.Images.Media._ID;
-    String[] ids;
+	    final String orderBy = MediaStore.Images.Media._ID;
+	    String[] ids;
+	//the above variables are early design flaw and should not be used...they were created with the thought that
+	//a picture would be inserted/viewed through the Listview
 	
-	static int recentSelected = -1;
-	public static ArrayList<Item> Items;
-	ArrayList<String> values = new ArrayList<String>();
+	
+	private static final String ITEM_FOUND = "itemFound";//during insertion of new data from broadcast - indicator
+	private static final URI SERVER_URL = null; //the URL to be saved in the database
+    
+	
+	ListView listView;//Listview to be displayed to the user
+	Item anItem;	//data model
+	
+	
+	ObserverNotes_Model userNotes;//actual Listview inflator
+	
+	DatabaseHandler db;//database instance to get data
+	Activity mCurrentActivity;//current activity with context
+	ItemAdapter adapter;//the controller that gets/put data into the database via Database Handler
+	
+	
+	
+	static int recentSelected = -1;//item clicked indicator
+	public static ArrayList<Item> Items;//list of items from local database
+	ArrayList<String> values = new ArrayList<String>();//list of strings
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {		
@@ -110,15 +136,16 @@ public class ObserverNotes extends CloudBackendActivity {
 
         Log.i("ObserverNotes:  ", "ONCREATE");
         //Button buttonLoadImage = (Button)findViewById(R.id.loadimage);
-        Button addObservation = (Button)findViewById(R.id.addnotes);
+        Button addObservation = (Button)findViewById(R.id.addnotes);//button to allow user to insert a new record
        
-        listView = (ListView) findViewById(R.id.list);
+        listView = (ListView) findViewById(R.id.list);//listview for user to interact with
         
-        userNotes = new ObserverNotes_Model();
-        userNotes.LoadModel(this);
+        userNotes = new ObserverNotes_Model();//listview inflator
+        //userNotes.LoadModel(this);
         
-        InputStream ims = null;
-        Items = new ArrayList<Item>();
+        InputStream ims = null;//used to read data from a file.  But is not being used as we are 
+        						//getting data from user's input
+        Items = new ArrayList<Item>();//list of data objects
         
         try {
             ims = getApplicationContext().getAssets().open("ic_launcher.png");
@@ -156,7 +183,7 @@ public class ObserverNotes extends CloudBackendActivity {
 		 String result = "";
 		    boolean hasextra = false;
 		    
-		    //try to get result from ItemAdapter
+		    //try to get result from ItemAdapter: usually after user inserted or updated a record
 		    hasextra = data.hasExtra("com.observer.notes");
 		    
 		    if(hasextra){
@@ -170,23 +197,23 @@ public class ObserverNotes extends CloudBackendActivity {
 
 	
 	
-	/*
-	 * 
-	 * @see com.google.cloud.backend.android.CloudBackendActivity#onResume()
-	 */
+	//Application life cycle.  Placed here to refresh the Listview after the user inserts/updates the
+	//Listview
     @Override
     public void onResume() {
 		
 		super.onResume();
 		//Toast.makeText(getApplicationContext(),"resuming ObserverNotes",Toast.LENGTH_LONG).show();  
 		Log.i("ObserverNotes:  ", "onResume");
+		
+		//call to re-display the listview with the latest data
 		Set_Referash_Data();
 
     }
     
     
     /*
-     * This is used to refresh ListView 
+     * This is used to display the latest data into ListView 
      */
     public void Set_Referash_Data() {
 	 		
@@ -200,24 +227,33 @@ public class ObserverNotes extends CloudBackendActivity {
         		Items = new ArrayList<Item>();
         	}
         		
-	    	db = new DatabaseHandler(this);
-	    	ArrayList<Item> item_array_from_db = db.Get_items();
+	    	db = new DatabaseHandler(this);//instantiate a database object
+	    	ArrayList<Item> item_array_from_db = db.Get_items();//get the latest data
 	
+	    	//break down the records fetched from database and insert 
+	    	//each record into an Item object.
+	    
 	    	for (int i = 0; i < item_array_from_db.size(); i++) {
 	
 	    	    int tidno = item_array_from_db.get(i).getId();
 	    	    String name = item_array_from_db.get(i).getKeyName();
 	    	    String datanotes = item_array_from_db.get(i).getDataNotes();
 	    	    String url = item_array_from_db.get(i).getImageUrl();
-	    	    item1 = new Item();
-	    	    item1.setId(tidno);
-	    	    item1.setKeyName(name);
-	    	    item1.setDataNotes(datanotes);
-	    	    item1.setImageUrl(url);
-	
-	    	    Items.add(item1);
+	    	    if(item_array_from_db.get(i)._deleted != "D" && 
+	    	    		!item_array_from_db.get(i).getKeyName().contains("whitepaper")	
+	    	    		){//insert item only if it's not marked for deletion
+		    	    item1 = new Item();
+		    	    item1.setId(tidno);
+		    	    item1.setKeyName(name);
+		    	    item1.setDataNotes(datanotes);
+		    	    item1.setImageUrl(url);
+		
+		    	    Items.add(item1);
+	    	    }
 	    	}
 	    	db.close();
+	    	
+	    	//insert the list of items into the model 
 	    	adapter = new ItemAdapter(ObserverNotes.this, R.layout.row,
 	    		Items);
 	    	listView.setAdapter(adapter);

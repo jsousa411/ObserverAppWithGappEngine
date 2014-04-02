@@ -1,3 +1,15 @@
+/*
+ * ObserverNotes_Model.java
+ * SFSU Fall 2013
+ * CSC 875 - Term Project
+ * Joao Sousa
+ * Notes:  This file contains the code that inflates data into the Listview adapter before it gets displayed in
+ * to the user in a Listview
+ * 
+ * 12/17/2013
+ */
+
+
 package com.observer.notes;
 
 import java.io.BufferedReader;
@@ -39,18 +51,7 @@ public class ObserverNotes_Model {
     public static void LoadModel(Context applicationcontext) {
 
     	currentContext = applicationcontext;
-    	/*
-        Items = new ArrayList<Item>();
-        Items.add(new Item(1, "ic_launcher.png", "Alarm","Default"));
-        Items.add(new Item(2, "ic_launcher.png", "Clock","Number One"));
-        Items.add(new Item(3, "ic_launcher.png", "Action","Number Two"));
-        */
     	
-    	
-
-        //create database
-        
-        
 
     }
 

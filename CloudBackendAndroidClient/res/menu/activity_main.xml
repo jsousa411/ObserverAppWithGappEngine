@@ -6,6 +6,11 @@
         android:orderInCategory="100"
         android:showAsAction="always"        
         android:title="@+string/notes"/>
+    <item
+        android:id="@+id/takePicture"
+        android:orderInCategory="100"
+        android:showAsAction="always"        
+        android:title="@+string/pics"/>
     
 
 </menu>
