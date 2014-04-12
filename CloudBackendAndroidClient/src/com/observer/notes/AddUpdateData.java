@@ -72,9 +72,10 @@ public class AddUpdateData extends Activity{
 		Intent intent = getIntent();
 		String called_from = intent.getStringExtra("UPDATE");
 		 
-		dbHandler.Update_item(new Item( 0, "Tomatoe",
+		/*dbHandler.Update_item(new Item( 0, "Tomatoe",
 			    "brown spots on the side", "www.tomato.com"));
-	
+	*/
+		
 		if (called_from.equalsIgnoreCase("add")) {
 		    add_view.setVisibility(View.VISIBLE);
 		    update_view.setVisibility(View.GONE);

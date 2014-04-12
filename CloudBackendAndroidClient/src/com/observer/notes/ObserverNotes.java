@@ -39,6 +39,7 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 
+
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
@@ -49,6 +50,7 @@ import com.google.cloud.backend.android.CloudEntity;
 import com.google.cloud.backend.android.CloudQuery.Order;
 import com.google.cloud.backend.android.CloudQuery.Scope;
 import com.google.cloud.backend.android.R;
+
 
 
 
@@ -148,9 +150,13 @@ public class ObserverNotes extends CloudBackendActivity {
         Items = new ArrayList<Item>();//list of data objects
         
         try {
+        	
             ims = getApplicationContext().getAssets().open("ic_launcher.png");
+            
         } catch (IOException e) {
+        	
             e.printStackTrace();
+            
         }
         
         
@@ -173,7 +179,7 @@ public class ObserverNotes extends CloudBackendActivity {
 	
 	
 	
-    
+    //Once we return from an activity, get the result(s) here
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
 	   
@@ -217,17 +223,27 @@ public class ObserverNotes extends CloudBackendActivity {
      */
     public void Set_Referash_Data() {
 	 		
+    		//List to be displayed to users
+    		//upon app start
 	 		Item item1;
 	 		
+	 		
+	 		//If we have data clear it
+	 		//this is usually if wea returning
+	 		//from another activity
         	if(Items != null){
         		Items.clear();
         	}
         	else{
-        		
+        		//otherwise on a fresh start
+        		//instantiate a new List
         		Items = new ArrayList<Item>();
         	}
         		
+        	//get database object
 	    	db = new DatabaseHandler(this);//instantiate a database object
+	    	
+	    	//read all of the database data into the List object to be displayed
 	    	ArrayList<Item> item_array_from_db = db.Get_items();//get the latest data
 	
 	    	//break down the records fetched from database and insert 
@@ -248,9 +264,13 @@ public class ObserverNotes extends CloudBackendActivity {
 		    	    item1.setDataNotes(datanotes);
 		    	    item1.setImageUrl(url);
 		
+		    	    //add each item read from database into the LIST
 		    	    Items.add(item1);
 	    	    }
 	    	}
+	    	
+	    	
+	    	
 	    	db.close();
 	    	
 	    	//insert the list of items into the model 

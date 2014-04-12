@@ -18,7 +18,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,9 +35,19 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
  
+
+
+
+
+
+import java.util.Date;
+import java.util.Locale;
+
+import com.google.api.services.drive.model.File;
 import com.google.cloud.backend.android.R;
 import com.google.cloud.backend.android.sample.guestbook.GuestbookActivity;
 
@@ -43,6 +56,15 @@ import com.google.cloud.backend.android.sample.guestbook.GuestbookActivity;
 public class ItemAdapter extends ArrayAdapter<Item> {	
 	private static final int SELECT_ITEM = 2;
 
+	private static final int GET_IMAGE = 11;
+
+	private static final String IMAGE_DIRECTORY_NAME = "ObserverImages";
+	
+
+	int IMAGE_CAPTURE = 10,
+		GALLERY = 1,
+		URI = 12;
+	
 	Activity activity;
 	int layoutResourceId;
 	Item myItem;
@@ -75,6 +97,8 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 	    	holder.url = (TextView) row.findViewById(R.id.item_url_txt);
 	    	holder.edit = (Button) row.findViewById(R.id.btn_update);
 	    	holder.delete = (Button) row.findViewById(R.id.btn_delete);
+	    	holder.image = (Button) row.findViewById(R.id.list_image);
+	    	holder.key_value = -1;
 	    	
 	    	row.setTag(holder);
 	    	
@@ -92,6 +116,8 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         	ti = myItem.getId();
 		    holder.edit.setTag(ti);
 		    holder.delete.setTag(ti);
+		    holder.image.setTag(ti);
+		    holder.key_value = ti;
 		    
 		    temp = myItem.getKeyName();//it should be key_name but it's under name.
         	holder.name.setText(myItem.getKeyName());
@@ -143,7 +169,69 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 			
 		});
 		    
+	    //image button click listener
+	    holder.image.setOnClickListener(new OnClickListener() {
+		    @Override
+			public void onClick(View v) {
+			    
+		    	
+		    	
+		    	String title = "Update Photo";
+		        CharSequence[] itemlist ={"Take a new image",
+					                      "Pick from Gallery",
+					                      "Download"};
+
+		        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+		        builder.setIcon(R.drawable.castnotes);
+		        builder.setTitle(title);
+		        builder.setItems(itemlist, new DialogInterface.OnClickListener() {
+
+		        	//prompt user for options on selecting new images
+			            @Override
+			            public void onClick(DialogInterface dialog, int which) {
+			            	
+			            	/*final Intent galleryIntent = new Intent(Intent.);
+
+			            	    //galleryIntent.setType("* / *");
+
+			            	    activity.startActivityForResult(galleryIntent, GET_IMAGE);*/
+
+			            	//define intent to prompt user for image selection options
+			            	Intent imageIntent;
+			            	
+			            	
+			                switch (which) {
+			                case 0:// Take a new image
+			                	imageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			                	
+			                    activity.startActivityForResult(imageIntent,IMAGE_CAPTURE); 
+			                    break;
+			                case 1:// Pick from Gallery
+			                	imageIntent = new Intent(Intent.ACTION_PICK );
+			                	imageIntent.setType("image/*");
+			                     
+			                	activity.startActivityForResult(imageIntent,GALLERY);
+			                    break;
+			                case 2:// Download
+			                	String url = "www.reuters.com";
+			                	imageIntent = new Intent(Intent.ACTION_VIEW);
+			                	imageIntent.setData(Uri.parse(url));
+			                	
+			                	activity.startActivityForResult(imageIntent, URI);
+			                    break;
+			                default:
+			                    break;
+			                }
+			            }
+		        });
+		        AlertDialog alert = builder.create();
+		        alert.setCancelable(true);
+		        alert.show();
+	
+			}
+	    });
 	    
+	    //record edit button click listener
 	    holder.edit.setOnClickListener(new OnClickListener() {
 		    @Override
 			public void onClick(View v) {
@@ -158,6 +246,8 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 	
 			}
 	    });
+	    
+	    //delete list record button listener
 	    holder.delete.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -204,15 +294,17 @@ public class ItemAdapter extends ArrayAdapter<Item> {
     }
     
     
-    
+   
     
     
     class ItemHolder {
 	    TextView name;
 	    TextView add_notes;
 	    TextView url;
+	    int key_value;
 	    Button edit;
-	    Button delete;	    
+	    Button delete;
+	    Button image;
 	    
 	}
 

@@ -74,7 +74,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 		 
 		//Create Database
 		 
-		String CREATE_itemS_TABLE = "CREATE TABLE " + TABLE_NAME + "("
+		String CREATE_itemS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
 				+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
 				+ KEY_NAME + " TEXT,"
 				+ TAXON + " TEXT," 
@@ -88,10 +88,11 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 				+ IMAGE_URL + " TEXT,"
 				+ DATE_TAKEN + " TEXT,"
 				+ DELETED +" TEXT"
-				+")";
+				+");";
 				
 		Log.d(LOGCAT,"Database created");
-				db.execSQL("IF NOT EXISTS " + TABLE_NAME + " " + CREATE_itemS_TABLE);
+				//db.execSQL("IF NOT EXISTS " + TABLE_NAME + " " + CREATE_itemS_TABLE);
+				  db.execSQL(""   + CREATE_itemS_TABLE);
 		
 	}
 
@@ -233,25 +234,25 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 	    String selectQuery = "SELECT  * FROM " + TABLE_NAME  + " WHERE "+DELETED+" != 'D'";
 
 	    SQLiteDatabase db = this.getWritableDatabase();
-//	    db.delete(TABLE_NAME, null, null);
-//	  //Create Database
-//	  		String CREATE_itemS_TABLE = "CREATE TABLE " + TABLE_NAME + "("
-//	  				+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-//	  				+ KEY_NAME + " TEXT,"
-//	  				+ TAXON + " TEXT," 
-//	  				+ COMMON + " TEXT," 
-//	  				+ LIFEFORM + " TEXT," 
-//	  				+ STATUS + " TEXT," 
-//	  				+ FAMILY + " TEXT," 
-//	  				+ BLOOM + " TEXT," 
-//	  				+ Data_NOTES + " TEXT," 
-//	  				+ Other_Notes + " TEXT," 
-//	  				+ IMAGE_URL + " TEXT,"
-//	  				+ DATE_TAKEN + " TEXT"
-//	  				+ DELETED +"TEXT"
-//	  				+")";
-//	  				
-//	  				db.execSQL(CREATE_itemS_TABLE);
+	/*    db.delete(TABLE_NAME, null, null);
+	  //Create Database
+	  		String CREATE_itemS_TABLE = "CREATE TABLE " + TABLE_NAME + "("
+	  				+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+	  				+ KEY_NAME + " TEXT,"
+	  				+ TAXON + " TEXT," 
+	  				+ COMMON + " TEXT," 
+	  				+ LIFEFORM + " TEXT," 
+	  				+ STATUS + " TEXT," 
+	  				+ FAMILY + " TEXT," 
+	  				+ BLOOM + " TEXT," 
+	  				+ Data_NOTES + " TEXT," 
+	  				+ Other_Notes + " TEXT," 
+	  				+ IMAGE_URL + " TEXT,"
+	  				+ DATE_TAKEN + " TEXT"
+	  				+ DELETED +"TEXT"
+	  				+")";
+	  				
+	  				db.execSQL(CREATE_itemS_TABLE);*/
 	  				
 	    Cursor cursor = db.rawQuery(selectQuery, null);
 

@@ -16,5 +16,6 @@
     <string name="AddObservation">Add Observation</string>
 	<string name="LoadImage">Load Image</string>
 	<string name="Id">ID</string>
+	<string name="imgDesc">Observed Image</string>
 	
 </resources>

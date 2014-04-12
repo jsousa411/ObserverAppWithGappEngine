@@ -29,11 +29,11 @@ public final class R {
         public static final int btn_update=0x7f090016;
         public static final int etMessage=0x7f090000;
         public static final int imageViewGallery=0x7f090011;
-        public static final int item_id=0x7f090012;
         public static final int item_name_txt=0x7f090013;
         public static final int item_notes_txt=0x7f090014;
         public static final int item_url_txt=0x7f090015;
         public static final int list=0x7f09000e;
+        public static final int list_image=0x7f090012;
         public static final int scrollView1=0x7f090002;
         public static final int takeNotes=0x7f090018;
         public static final int takePicture=0x7f090019;
@@ -73,6 +73,7 @@ public final class R {
         public static final int emptystring=0x7f060005;
         public static final int hello_world=0x7f060001;
         public static final int image_description=0x7f060006;
+        public static final int imgDesc=0x7f06000f;
         public static final int menu_settings=0x7f060002;
         public static final int notes=0x7f060009;
         public static final int pics=0x7f06000a;

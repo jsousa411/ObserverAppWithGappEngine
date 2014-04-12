@@ -74,7 +74,7 @@ public class GuestbookActivity extends CloudBackendActivity {
   
   // a list of posts on the UI
   List<CloudEntity> posts = new LinkedList<CloudEntity>();
-  
+  //com.google.cloud.backend.android
   
   static HandlerThread  mainThread = new HandlerThread("main thread");
 
